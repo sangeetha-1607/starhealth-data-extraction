@@ -46,7 +46,7 @@ const uri = 'mongodb://appAdmin:HLASr!E*66Xm@wellness-cmp-db.cluster-c1sodybcij4
             return [...acc, {
               updateOne: {
                 filter: { _id: item._id },
-                update: { $push: { participants: careProgramDoctor } }
+                update: { $set:{doctor:careProgramDoctor.reference}, $push: { participants: careProgramDoctor } }
               }
             }];
           }

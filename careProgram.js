@@ -10,7 +10,6 @@ const uri = 'mongodb://appAdmin:HLASr!E*66Xm@wellness-cmp-db.cluster-c1sodybcij4
 (async ()=>{
     try {
         console.log("Connecting to DB")
-        var fs = require('fs');
         const {ObjectId} = require('mongodb')
     
         // let databaseName = "star-prod";

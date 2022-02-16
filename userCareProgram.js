@@ -10,8 +10,6 @@ const uri = 'mongodb://appAdmin:HLASr!E*66Xm@wellness-cmp-db.cluster-c1sodybcij4
 (async ()=>{
     try {
         console.log("Connecting to DB")
-        var fs = require('fs');
-        const {ObjectId} = require('mongodb')
     
         // let databaseName = "star-prod";
         let databaseName = "cmp-prod";
@@ -36,15 +34,19 @@ const uri = 'mongodb://appAdmin:HLASr!E*66Xm@wellness-cmp-db.cluster-c1sodybcij4
 
         let userCareProgrammePlansBulkWriteOperations = userCareProgrammePlansData.reduce((acc, item) => {
           const participants = careProgrammePlanMap[String(item.careProgrammePlan)]?.careProgramme?.participants
-          const doctor = participants?.find(
+          const doctor = item.participants?.find(
             (participant) =>
               participant.role === "doctor" && participant.isPrimary === true
           );
-          if (doctor) {
+          if (!doctor) {
+            const careProgramDoctor = participants?.find(
+              (participant) =>
+                participant.role === "doctor" && participant.isPrimary === true
+            );
             return [...acc, {
               updateOne: {
                 filter: { _id: item._id },
-                update: { $push: { participants: doctor } }
+                update: { $push: { participants: careProgramDoctor } }
               }
             }];
           }

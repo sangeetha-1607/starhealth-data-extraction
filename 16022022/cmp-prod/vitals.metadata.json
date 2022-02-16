@@ -1,0 +1,1 @@
+{"options":{"autoIndexId":true,"capped":false},"indexes":[{"v":{"$numberInt":"4"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmp-prod.vitals"},{"v":{"$numberInt":"4"},"unique":true,"key":{"name":{"$numberInt":"1"}},"name":"name_1","ns":"cmp-prod.vitals"}],"collectionName":"vitals","type":"collection"}

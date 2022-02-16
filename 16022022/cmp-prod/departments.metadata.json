@@ -1,0 +1,1 @@
+{"options":{"capped":false,"autoIndexId":true},"indexes":[{"v":{"$numberInt":"4"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmp-prod.departments"},{"v":{"$numberInt":"4"},"key":{"name":{"$numberInt":"1"}},"name":"name_1","ns":"cmp-prod.departments"}],"collectionName":"departments","type":"collection"}

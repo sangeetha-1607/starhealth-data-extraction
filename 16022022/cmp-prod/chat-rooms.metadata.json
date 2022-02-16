@@ -1,0 +1,1 @@
+{"options":{"capped":false,"autoIndexId":true},"indexes":[{"v":{"$numberInt":"4"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmp-prod.chat-rooms"},{"v":{"$numberInt":"4"},"unique":true,"key":{"reference":{"$numberInt":"1"}},"name":"reference_1","ns":"cmp-prod.chat-rooms"}],"collectionName":"chat-rooms","type":"collection"}

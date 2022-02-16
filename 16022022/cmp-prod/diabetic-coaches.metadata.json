@@ -1,0 +1,1 @@
+{"options":{"autoIndexId":true,"capped":false},"indexes":[{"v":{"$numberInt":"4"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmp-prod.diabetic-coaches"},{"v":{"$numberInt":"4"},"unique":true,"key":{"mobile.number":{"$numberInt":"1"}},"name":"mobile.number_1","ns":"cmp-prod.diabetic-coaches"}],"collectionName":"diabetic-coaches","type":"collection"}

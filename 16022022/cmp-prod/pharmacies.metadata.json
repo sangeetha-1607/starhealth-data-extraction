@@ -1,0 +1,1 @@
+{"options":{"capped":false,"autoIndexId":true},"indexes":[{"v":{"$numberInt":"4"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmp-prod.pharmacies"},{"v":{"$numberInt":"4"},"unique":true,"key":{"mobile.number":{"$numberInt":"1"}},"name":"mobile.number_1","ns":"cmp-prod.pharmacies"}],"collectionName":"pharmacies","type":"collection"}

@@ -1,0 +1,16 @@
+
+# package directories
+node_modules
+jspm_packages
+dist
+
+# Serverless directories
+.serverless
+.serverless-offline
+
+#Ignore TODO files
+package-lock.json
+*.todo
+
+.env
+.env.*

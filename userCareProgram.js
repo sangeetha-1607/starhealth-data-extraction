@@ -53,6 +53,7 @@ const uri = 'mongodb://appAdmin:HLASr!E*66Xm@wellness-cmp-db.cluster-c1sodybcij4
           return acc;
         },[]);
         await userCareProgrammePlansModel.bulkWrite(userCareProgrammePlansBulkWriteOperations);
+        console.log("result", JSON.stringify(result, null, 2))
         console.log('User Care Program data modified successfully');
         process.exit(1);
         

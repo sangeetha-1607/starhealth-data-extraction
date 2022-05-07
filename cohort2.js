@@ -222,9 +222,14 @@ async function main(){
     
     } catch (e) {
         console.error(e);
+        process.exit(0);
     } finally {
         await client.close();
+        process.exit(0);
     }
 }
     
-main().catch(console.error);
+main().catch((e)=>{
+  console.error(e);
+  process.exit(0);
+});

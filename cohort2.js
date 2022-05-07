@@ -136,13 +136,13 @@ async function main(){
             },{});
 
             const patients = userCareprogramsplans.map((item)=>{
-                const user = item?.careProgrammePlan?.userCareProgramPlan?.user
+                const user = item.careProgrammePlan && item.careProgrammePlan.userCareProgramPlan && item.careProgrammePlan.userCareProgramPlan.user
                 const currDate = new Date()
-                const dobDate = user?.dob && new Date(user?.dob);
+                const dobDate = user.dob && new Date(user.dob);
                 const age = dobDate && currDate.getFullYear()-dobDate.getFullYear();
-                const [address] = user?.addresses
-                const height = user?.medicalProfile?.height;
-                const weight = user?.medicalProfile?.weight ? user?.medicalProfile?.weight : user?.medicalProfile?.recentVitals?.vital_body_weight;
+                const [address] = user.addresses
+                const height = user.medicalProfile && user.medicalProfile.height;
+                const weight = user.medicalProfile && user.medicalProfile.weight ? user.medicalProfile.weight : user.medicalProfile.recentVitals.vital_body_weight;
                 const bmi = (height && weight) && Number.parseFloat(Number.parseFloat((weight/(height*height))*10000).toFixed(2));
                 let onboardingQues = Object.assign({}, questionNamesMap );
                 user.onboardingQuestions.forEach(item=>{
@@ -151,30 +151,30 @@ async function main(){
                         answer =onboardingQuestionMap[item.onboardingQuestion].question.options.filter(opItem=>item.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
                     }
                     if(onboardingQuestionMap[item.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
-                        answer =onboardingQuestionMap[item.onboardingQuestion].question.options.find(opItem=>String(item.answer) === String(opItem._id))?.value
+                        answer =onboardingQuestionMap[item.onboardingQuestion].question.options.find(opItem=>String(item.answer) === String(opItem._id)).value
                     }
                     onboardingQues[String(onboardingQuestionMap[item.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, onboardingQuestionMap[item.onboardingQuestion], {answer})
                 })
 
                 let screeningQues = Object.assign({}, goalQuestionsNameMap );
-                item?.screeningQuestions?.forEach(sqitem=>{
+                item.screeningQuestions.forEach(sqitem=>{
                     let answer = sqitem.answer;
                     if(goalQuestionsMap[sqitem.onboardingQuestion].question["type"] === "multiple-choice-multi-select"){
                         answer =goalQuestionsMap[sqitem.onboardingQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
                     }
                     if(goalQuestionsMap[sqitem.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
-                        answer =goalQuestionsMap[sqitem.onboardingQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id))?.value
+                        answer =goalQuestionsMap[sqitem.onboardingQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).value
                     }
                     screeningQues[String(goalQuestionsMap[sqitem.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.onboardingQuestion], {answer})
                 })
                 
                 let userObject = {
-                    firstName: user?.name.first || "-",
-                    lastName: user?.name.last || "-",
-                    mobile: user?.mobile || "-",
-                    email: user?.email || "-",
-                    gender: user?.gender || "-",
-                    dob: user?.dob || "-",
+                    firstName: user.name.first || "-",
+                    lastName: user.name.last || "-",
+                    mobile: user.mobile || "-",
+                    email: user.email || "-",
+                    gender: user.gender || "-",
+                    dob: user.dob || "-",
                     age: age > 0 ? age : "-",
                     ageClassification:
                         age > 0 && age <= 12
@@ -186,9 +186,9 @@ async function main(){
                         : age >= 60
                         ? "Senior Adult"
                         : "-",
-                    city: address?.city || "-",
-                    state: address?.state || "-",
-                    patientUHID: user?._id || "-",
+                    city: address.city || "-",
+                    state: address.state || "-",
+                    patientUHID: user._id || "-",
                     height: height || "-",
                     weight: weight || "-",
                     BMI: bmi || "-",
@@ -208,10 +208,10 @@ async function main(){
                         : bmi >= 45
                         ? "Super Obese"
                         : "-",
-                    waistCircumference: user?.medicalProfile?.recentVitals?.vital_waist_hip_ratio.waist || "-",
-                    hipCircumference: user?.medicalProfile?.recentVitals?.vital_waist_hip_ratio.hip || "-",
-                    waist: user?.medicalProfile?.recentVitals?.vital_waist_hip_ratio.value || "-",
-                    BP: user?.medicalProfile?.recentVitals?.vital_waist_hip_ratio.vital_bp || "-",
+                    waistCircumference: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_waist_hip_ratio && user.medicalProfile.recentVitals.vital_waist_hip_ratio.waist || "-",
+                    hipCircumference: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_waist_hip_ratio && user.medicalProfile.recentVitals.vital_waist_hip_ratio.hip || "-",
+                    waist: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_waist_hip_ratio && user.medicalProfile.recentVitals.vital_waist_hip_ratio.value || "-",
+                    BP: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_bp || "-",
                 };
                 Object.assign(userObject, onboardingQues, screeningQues)
                 return userObject

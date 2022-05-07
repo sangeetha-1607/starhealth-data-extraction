@@ -142,7 +142,7 @@ async function main(){
                 const age = dobDate && currDate.getFullYear()-dobDate.getFullYear();
                 const [address] = user.addresses
                 const height = user.medicalProfile && user.medicalProfile.height;
-                const weight = user.medicalProfile && user.medicalProfile.weight ? user.medicalProfile.weight : user.medicalProfile.recentVitals.vital_body_weight;
+                const weight = user.medicalProfile && user.medicalProfile.weight ? user.medicalProfile.weight : user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_body_weight;
                 const bmi = (height && weight) && Number.parseFloat(Number.parseFloat((weight/(height*height))*10000).toFixed(2));
                 let onboardingQues = Object.assign({}, questionNamesMap );
                 user.onboardingQuestions.forEach(item=>{

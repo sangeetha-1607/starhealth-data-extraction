@@ -157,15 +157,15 @@ async function main(){
                 })
 
                 let screeningQues = Object.assign({}, goalQuestionsNameMap );
-                item.screeningQuestions.forEach(sqitem=>{
+                item.screeningQuestions && item.screeningQuestions.forEach(sqitem=>{
                     let answer = sqitem.answer;
-                    if(goalQuestionsMap[sqitem.onboardingQuestion].question["type"] === "multiple-choice-multi-select"){
-                        answer =goalQuestionsMap[sqitem.onboardingQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
+                    if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
+                        answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
                     }
-                    if(goalQuestionsMap[sqitem.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
-                        answer =goalQuestionsMap[sqitem.onboardingQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).value
+                    if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-single-select"){
+                        answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).value
                     }
-                    screeningQues[String(goalQuestionsMap[sqitem.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.onboardingQuestion], {answer})
+                    screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
                 })
                 
                 let userObject = {

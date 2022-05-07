@@ -169,12 +169,12 @@ async function main(){
                 })
                 
                 let userObject = {
-                    firstName: user.name.first || "-",
-                    lastName: user.name.last || "-",
-                    mobile: user.mobile || "-",
-                    email: user.email || "-",
-                    gender: user.gender || "-",
-                    dob: user.dob || "-",
+                    firstName: user && user.name.first || "-",
+                    lastName: user && user.name.last || "-",
+                    mobile: user && user.mobile || "-",
+                    email: user && user.email || "-",
+                    gender: user && user.gender || "-",
+                    dob: user && user.dob || "-",
                     age: age > 0 ? age : "-",
                     ageClassification:
                         age > 0 && age <= 12
@@ -186,8 +186,8 @@ async function main(){
                         : age >= 60
                         ? "Senior Adult"
                         : "-",
-                    city: address.city || "-",
-                    state: address.state || "-",
+                    city: address && address.city || "-",
+                    state: address && address.state || "-",
                     patientUHID: user._id || "-",
                     height: height || "-",
                     weight: weight || "-",

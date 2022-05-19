@@ -66,6 +66,11 @@ async function main(){
                   preserveNullAndEmptyArrays: false,
                 },
               },
+              {
+                $match: {
+                    "careProgrammePlan.userCareProgramPlan.state": "active"
+                }
+              }
             ];
             const userCareprogramsplans = await careProgrammeModel.aggregate(cpAgg).toArray()
             const obqAgg = [

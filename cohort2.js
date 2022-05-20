@@ -222,7 +222,7 @@ async function main(){
                 return userObject
             })
 
-            fs.writeFileSync('users-cohort-2.json', JSON.stringify(patients, null, 2));
+            fs.writeFileSync(`users-cohort-2-${new Date()}.json`, JSON.stringify(patients, null, 2));
             process.exit(0);
     
     } catch (e) {

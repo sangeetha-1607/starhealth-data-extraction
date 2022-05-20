@@ -221,8 +221,8 @@ async function main(){
                 Object.assign(userObject, onboardingQues, screeningQues)
                 return userObject
             })
-
-            fs.writeFileSync(`users-cohort-2-${new Date()}.json`, JSON.stringify(patients, null, 2));
+            
+            fs.writeFileSync(`users-cohort-2-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
             process.exit(0);
     
     } catch (e) {

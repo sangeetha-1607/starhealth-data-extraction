@@ -87,46 +87,51 @@ async function main(){
                     path: "$question",
                     preserveNullAndEmptyArrays: false,
                   },
+                },
+                {
+                  $match: {
+                      "status": "active"
+                  }
                 }
               ];
             const onboardingQuestions = await onboardingQuestionsModel.aggregate(obqAgg).toArray()
-            const cpqAgg = [
-                {
-                  $match: {
-                    name: { $regex: "^Condition Management Program$" },
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "care-programme-questions",
-                    localField: "_id",
-                    foreignField: "careProgramme",
-                    as: "careProgrammeQuestions",
-                  },
-                },
-                {
-                  $unwind: {
-                    path: "$careProgrammeQuestions",
-                    preserveNullAndEmptyArrays: false,
-                  },
-                },
-                {
-                    $lookup: {
-                      from: "questions",
-                      localField: "careProgrammeQuestions.question",
-                      foreignField: "_id",
-                      as: "careProgrammeQuestions.question",
-                    },
-                },
-                {
-                    $unwind: {
-                        path: "$careProgrammeQuestions.question",
-                        preserveNullAndEmptyArrays: false,
-                    },
-                }
-              ];
-            const goalQuestions = await careProgrammeModel.aggregate(cpqAgg).toArray();
-            let goalQuestionsNameMap = {}
+            // const cpqAgg = [
+            //     {
+            //       $match: {
+            //         name: { $regex: "^Condition Management Program$" },
+            //       },
+            //     },
+            //     {
+            //       $lookup: {
+            //         from: "care-programme-questions",
+            //         localField: "_id",
+            //         foreignField: "careProgramme",
+            //         as: "careProgrammeQuestions",
+            //       },
+            //     },
+            //     {
+            //       $unwind: {
+            //         path: "$careProgrammeQuestions",
+            //         preserveNullAndEmptyArrays: false,
+            //       },
+            //     },
+            //     {
+            //         $lookup: {
+            //           from: "questions",
+            //           localField: "careProgrammeQuestions.question",
+            //           foreignField: "_id",
+            //           as: "careProgrammeQuestions.question",
+            //         },
+            //     },
+            //     {
+            //         $unwind: {
+            //             path: "$careProgrammeQuestions.question",
+            //             preserveNullAndEmptyArrays: false,
+            //         },
+            //     }
+            //   ];
+            // const goalQuestions = await careProgrammeModel.aggregate(cpqAgg).toArray();
+            // let goalQuestionsNameMap = {}
             let questionNamesMap = {}
             
             const onboardingQuestionMap = onboardingQuestions.reduce((acc, item)=>{
@@ -134,11 +139,11 @@ async function main(){
                 questionNamesMap[String(item.question.title.toLowerCase().split(" ").join("_"))]={}
                 return acc; 
             },{});
-            const goalQuestionsMap = goalQuestions.reduce((acc, item)=>{
-                acc[String(item.careProgrammeQuestions._id)] = JSON.parse(JSON.stringify(item.careProgrammeQuestions));
-                goalQuestionsNameMap[String(item.careProgrammeQuestions.question.title.toLowerCase().split(" ").join("_"))]={}
-                return acc; 
-            },{});
+            // const goalQuestionsMap = goalQuestions.reduce((acc, item)=>{
+            //     acc[String(item.careProgrammeQuestions._id)] = JSON.parse(JSON.stringify(item.careProgrammeQuestions));
+            //     goalQuestionsNameMap[String(item.careProgrammeQuestions.question.title.toLowerCase().split(" ").join("_"))]={}
+            //     return acc; 
+            // },{});
 
             const patients = userCareprogramsplans.map((item)=>{
                 const user = item.careProgrammePlan && item.careProgrammePlan.userCareProgramPlan && item.careProgrammePlan.userCareProgramPlan.user
@@ -161,17 +166,17 @@ async function main(){
                     onboardingQues[String(onboardingQuestionMap[item.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, onboardingQuestionMap[item.onboardingQuestion], {answer})
                 })
 
-                let screeningQues = Object.assign({}, goalQuestionsNameMap );
-                item.screeningQuestions && item.screeningQuestions.forEach(sqitem=>{
-                    let answer = sqitem.answer;
-                    if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
-                        answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
-                    }
-                    if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-single-select"){
-                        answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).value
-                    }
-                    screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
-                })
+                // let screeningQues = Object.assign({}, goalQuestionsNameMap );
+                // item.screeningQuestions && item.screeningQuestions.forEach(sqitem=>{
+                //     let answer = sqitem.answer;
+                //     if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
+                //         answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
+                //     }
+                //     if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-single-select"){
+                //         answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).value
+                //     }
+                //     screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
+                // })
                 
                 let userObject = {
                     firstName: user && user.name.first || "-",
@@ -218,11 +223,11 @@ async function main(){
                     waist: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_waist_hip_ratio && user.medicalProfile.recentVitals.vital_waist_hip_ratio.value || "-",
                     BP: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_bp || "-",
                 };
-                Object.assign(userObject, onboardingQues, screeningQues)
+                Object.assign(userObject, onboardingQues)
                 return userObject
             })
             
-            fs.writeFileSync(`users-cohort-2-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+            fs.writeFileSync(`users-cohort-2-onboarding-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
             process.exit(0);
     
     } catch (e) {

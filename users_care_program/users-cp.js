@@ -84,7 +84,7 @@ async function main(){
                 return userObject
             })
             
-            fs.writeFileSync(`users_care_program/users-care-program-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+            fs.writeFileSync(`users-care-program-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
             process.exit(0);
     
     } catch (e) {

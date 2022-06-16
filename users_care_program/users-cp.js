@@ -71,14 +71,17 @@ async function main(){
 
             const patients = userCareprogramsplans.map((item)=>{
                 const user = item.careProgrammePlan && item.careProgrammePlan.userCareProgramPlan && item.careProgrammePlan.userCareProgramPlan.user
+                const dobDate = user.dob && new Date(user.dob);
+                dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear()
                 let userObject = {
                     firstName: user && user.name.first || "-",
                     lastName: user && user.name.last || "-",
                     mobile: user && user.mobile || "-",
                     email: user && user.email || "-",
+                    dob: user && user.dob || "-",
                     careProgramName: item.name || "-",
-                    enrolledDate: item.createdAt || "-",
-                    status: item.status || "-",
+                    enrolledDate: item.careProgrammePlan.userCareProgramPlan.createdAt || "-",
+                    status: item.careProgrammePlan.userCareProgramPlan.state || "-",
                     
                 };
                 return userObject

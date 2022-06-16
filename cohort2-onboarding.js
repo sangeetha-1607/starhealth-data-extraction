@@ -68,7 +68,10 @@ async function main(){
               },
               {
                 $match: {
-                    "careProgrammePlan.userCareProgramPlan.state": "active"
+                    "careProgrammePlan.userCareProgramPlan.state": "active",
+                    "careProgrammePlan.userCareProgramPlan.user.mobile": {
+                      $in: ["9975507479", "9246278368", "8900720626", "7411014614", "9773737739", "9716383100",  "9441671234", "8171149443", "9005035258", "7639507268", "9674233020", "9975111100", "9003711555"]
+                    }
                 }
               }
             ];

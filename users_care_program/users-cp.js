@@ -19,11 +19,6 @@ async function main(){
             
             const cpAgg = [
               {
-                $match: {
-                  name: { $regex: "^Condition Management Program$" },
-                },
-              },
-              {
                 $lookup: {
                   from: "care-programme-plans",
                   localField: "_id",

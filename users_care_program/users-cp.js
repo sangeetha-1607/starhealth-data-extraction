@@ -72,15 +72,17 @@ async function main(){
             const patients = userCareprogramsplans.map((item)=>{
                 const user = item.careProgrammePlan && item.careProgrammePlan.userCareProgramPlan && item.careProgrammePlan.userCareProgramPlan.user
                 const dobDate = user.dob && new Date(user.dob);
-                dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear()
+                const dob = dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear();
+                const enrollmentDate = item.careProgrammePlan.userCareProgramPlan.createdAt && new Date(item.careProgrammePlan.userCareProgramPlan.createdAt)
+                const enrllDate = enrollmentDate && enrollmentDate.getDate()+"-"+(enrollmentDate.getMonth()+1)+"-"+enrollmentDate.getFullYear();
                 let userObject = {
                     firstName: user && user.name.first || "-",
                     lastName: user && user.name.last || "-",
                     mobile: user && user.mobile || "-",
                     email: user && user.email || "-",
-                    dob: user && user.dob || "-",
+                    dob: user && dob || "-",
                     careProgramName: item.name || "-",
-                    enrolledDate: item.careProgrammePlan.userCareProgramPlan.createdAt || "-",
+                    enrolledDate: enrllDate || "-",
                     status: item.careProgrammePlan.userCareProgramPlan.state || "-",
                     
                 };

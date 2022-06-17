@@ -30,7 +30,7 @@ async function main(){
               {
                 $unwind: {
                   path: "$userCareProgramPlan",
-                  preserveNullAndEmptyArrays: false,
+                  preserveNullAndEmptyArrays: true,
                 },
               },
               {
@@ -44,7 +44,7 @@ async function main(){
               {
                 $unwind: {
                   path: "$userCareProgramPlan.careProgrammePlan",
-                  preserveNullAndEmptyArrays: false,
+                  preserveNullAndEmptyArrays: true,
                 },
               },
               {
@@ -64,7 +64,7 @@ async function main(){
               {
                 $unwind: {
                   path: "$userData.userCareProgramPlan.careProgrammePlan.careProgramme",
-                  preserveNullAndEmptyArrays: false,
+                  preserveNullAndEmptyArrays: true,
                 },
               }
             ];

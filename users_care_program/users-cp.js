@@ -49,7 +49,7 @@ async function main(){
               },
               {
                 $group:{
-                  _id: "$userCareProgramPlan.careProgrammePlan._id",
+                  _id: "$_id",
                   userData: {$first: "$$ROOT"}
                 }
               },

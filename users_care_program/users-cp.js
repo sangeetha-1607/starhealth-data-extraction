@@ -16,59 +16,66 @@ async function main(){
             console.log("MongoDB connected!!!")
             const database = client.db("cmp-prod");
             const careProgrammeModel  = database.collection("care-programmes");
+            const usersModel  = database.collection("users");
             
             const cpAgg = [
               {
                 $lookup: {
-                  from: "care-programme-plans",
-                  localField: "_id",
-                  foreignField: "careProgramme",
-                  as: "careProgrammePlan",
-                },
-              },
-              {
-                $unwind: {
-                  path: "$careProgrammePlan",
-                  preserveNullAndEmptyArrays: false,
-                },
-              },
-              {
-                $lookup: {
                   from: "user-care-programme-plans",
-                  localField: "careProgrammePlan._id",
-                  foreignField: "careProgrammePlan",
-                  as: "careProgrammePlan.userCareProgramPlan",
+                  localField: "_id",
+                  foreignField: "user",
+                  as: "userCareProgramPlan",
                 },
               },
               {
                 $unwind: {
-                  path: "$careProgrammePlan.userCareProgramPlan",
+                  path: "$userCareProgramPlan",
                   preserveNullAndEmptyArrays: false,
                 },
               },
               {
                 $lookup: {
-                  from: "users",
-                  localField: "careProgrammePlan.userCareProgramPlan.user",
+                  from: "care-programme-plans",
+                  localField: "userCareProgramPlan.careProgrammePlan",
                   foreignField: "_id",
-                  as: "careProgrammePlan.userCareProgramPlan.user",
+                  as: "userCareProgramPlan.careProgrammePlan",
                 },
               },
               {
                 $unwind: {
-                  path: "$careProgrammePlan.userCareProgramPlan.user",
+                  path: "$userCareProgramPlan.careProgrammePlan",
+                  preserveNullAndEmptyArrays: false,
+                },
+              },
+              {
+                $group:{
+                  _id: "$userCareProgramPlan.careProgrammePlan._id",
+                  userData: {$first: "$$ROOT"}
+                }
+              },
+              {
+                $lookup: {
+                  from: "care-programmes",
+                  localField: "userData.userCareProgramPlan.careProgrammePlan.careProgramme",
+                  foreignField: "_id",
+                  as: "userData.userCareProgramPlan.careProgrammePlan.careProgramme",
+                },
+              },
+              {
+                $unwind: {
+                  path: "$userData.userCareProgramPlan.careProgrammePlan.careProgramme",
                   preserveNullAndEmptyArrays: false,
                 },
               }
             ];
-            const userCareprogramsplans = await careProgrammeModel.aggregate(cpAgg).toArray()
-
-
+            const userCareprogramsplans = await usersModel.aggregate(cpAgg).toArray()
+       
             const patients = userCareprogramsplans.map((item)=>{
-                const user = item.careProgrammePlan && item.careProgrammePlan.userCareProgramPlan && item.careProgrammePlan.userCareProgramPlan.user
+                const careProgram = item.userData.userCareProgramPlan && item.userData.userCareProgramPlan.careProgrammePlan && item.userData.userCareProgramPlan.careProgrammePlan.careProgramme
+                const user = item.userData
                 const dobDate = user.dob && new Date(user.dob);
                 const dob = dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear();
-                const enrollmentDate = item.careProgrammePlan.userCareProgramPlan.createdAt && new Date(item.careProgrammePlan.userCareProgramPlan.createdAt)
+                const enrollmentDate = item.userData.userCareProgramPlan.createdAt && new Date(item.userData.userCareProgramPlan.createdAt)
                 const enrllDate = enrollmentDate && enrollmentDate.getDate()+"-"+(enrollmentDate.getMonth()+1)+"-"+enrollmentDate.getFullYear();
                 let userObject = {
                     firstName: user && user.name.first || "-",
@@ -76,9 +83,9 @@ async function main(){
                     mobile: user && user.mobile || "-",
                     email: user && user.email || "-",
                     dob: user && dob || "-",
-                    careProgramName: item.name || "-",
+                    careProgramName: careProgram && careProgram.name || "-",
                     enrolledDate: enrllDate || "-",
-                    status: item.careProgrammePlan.userCareProgramPlan.state || "-",
+                    status: item.userData && item.userData.userCareProgramPlan && item.userData.userCareProgramPlan.state || "-",
                     
                 };
                 return userObject

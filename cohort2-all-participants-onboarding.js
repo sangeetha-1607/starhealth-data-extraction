@@ -230,7 +230,7 @@ async function main(){
                 return userObject
             })
             
-            fs.writeFileSync(`users-cohort-2-onboarding-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+            fs.writeFileSync(`users-cohort-2-all-participants-onboarding-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
             process.exit(0);
     
     } catch (e) {

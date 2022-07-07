@@ -16,7 +16,7 @@ async function main(){
             console.log("MongoDB connected!!!")
             const database = client.db("cmp-prod");
             const careProgrammeModel  = database.collection("care-programmes");
-            // const onboardingQuestionsModel  = database.collection("onboarding-questions");
+            const onboardingQuestionsModel  = database.collection("onboarding-questions");
             
             const cpAgg = [
               {
@@ -73,77 +73,41 @@ async function main(){
               }
             ];
             const userCareprogramsplans = await careProgrammeModel.aggregate(cpAgg).toArray()
-            // const obqAgg = [
-            //     {
-            //       $lookup: {
-            //         from: "questions",
-            //         localField: "question",
-            //         foreignField: "_id",
-            //         as: "question",
-            //       },
-            //     },
-            //     {
-            //       $unwind: {
-            //         path: "$question",
-            //         preserveNullAndEmptyArrays: false,
-            //       },
-            //     }
-            //   ];
-            // const onboardingQuestions = await onboardingQuestionsModel.aggregate(obqAgg).toArray()
-            const cpqAgg = [
-                {
-                  $match: {
-                    name: { $regex: "^Condition Management Program$" },
-                  },
-                },
+            const obqAgg = [
                 {
                   $lookup: {
-                    from: "care-programme-questions",
-                    localField: "_id",
-                    foreignField: "careProgramme",
-                    as: "careProgrammeQuestions",
+                    from: "questions",
+                    localField: "question",
+                    foreignField: "_id",
+                    as: "question",
                   },
                 },
                 {
                   $unwind: {
-                    path: "$careProgrammeQuestions",
+                    path: "$question",
                     preserveNullAndEmptyArrays: false,
                   },
                 },
                 {
-                    $lookup: {
-                      from: "questions",
-                      localField: "careProgrammeQuestions.question",
-                      foreignField: "_id",
-                      as: "careProgrammeQuestions.question",
-                    },
-                },
-                {
-                    $unwind: {
-                        path: "$careProgrammeQuestions.question",
-                        preserveNullAndEmptyArrays: false,
-                    },
-                },
-                {
                   $match: {
-                      "careProgrammeQuestions.status": "active"
+                      "status": "active"
                   }
                 }
               ];
-            const goalQuestions = await careProgrammeModel.aggregate(cpqAgg).toArray();
-            let goalQuestionsNameMap = {}
-            // let questionNamesMap = {}
+            const onboardingQuestions = await onboardingQuestionsModel.aggregate(obqAgg).toArray()
             
-            // const onboardingQuestionMap = onboardingQuestions.reduce((acc, item)=>{
-            //     acc[String(item._id)] = JSON.parse(JSON.stringify(item));
-            //     questionNamesMap[String(item.question.title.toLowerCase().split(" ").join("_"))]={}
-            //     return acc; 
-            // },{});
-            const goalQuestionsMap = goalQuestions.reduce((acc, item)=>{
-                acc[String(item.careProgrammeQuestions._id)] = JSON.parse(JSON.stringify(item.careProgrammeQuestions));
-                goalQuestionsNameMap[String(item.careProgrammeQuestions.question.title.toLowerCase().split(" ").join("_"))]={}
+            let questionNamesMap = {}
+            
+            const onboardingQuestionMap = onboardingQuestions.reduce((acc, item)=>{
+                acc[String(item._id)] = JSON.parse(JSON.stringify(item));
+                questionNamesMap[String(item.question.title.toLowerCase().split(" ").join("_"))]={}
                 return acc; 
             },{});
+            // const goalQuestionsMap = goalQuestions.reduce((acc, item)=>{
+            //     acc[String(item.careProgrammeQuestions._id)] = JSON.parse(JSON.stringify(item.careProgrammeQuestions));
+            //     goalQuestionsNameMap[String(item.careProgrammeQuestions.question.title.toLowerCase().split(" ").join("_"))]={}
+            //     return acc; 
+            // },{});
 
             const patients = userCareprogramsplans.map((item)=>{
                 const user = item.careProgrammePlan && item.careProgrammePlan.userCareProgramPlan && item.careProgrammePlan.userCareProgramPlan.user
@@ -154,29 +118,29 @@ async function main(){
                 const height = user.medicalProfile && user.medicalProfile.height;
                 const weight = user.medicalProfile && user.medicalProfile.weight ? user.medicalProfile.weight : user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_body_weight;
                 const bmi = (height && weight) && Number.parseFloat(Number.parseFloat((weight/(height*height))*10000).toFixed(2));
-                // let onboardingQues = Object.assign({}, questionNamesMap );
-                // user.onboardingQuestions.forEach(item=>{
-                //     let answer = item.answer;
-                //     if(onboardingQuestionMap[item.onboardingQuestion].question["type"] === "multiple-choice-multi-select"){
-                //         answer =onboardingQuestionMap[item.onboardingQuestion].question.options.filter(opItem=>item.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
-                //     }
-                //     if(onboardingQuestionMap[item.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
-                //         answer =onboardingQuestionMap[item.onboardingQuestion].question.options.find(opItem=>String(item.answer) === String(opItem._id)).value
-                //     }
-                //     onboardingQues[String(onboardingQuestionMap[item.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, onboardingQuestionMap[item.onboardingQuestion], {answer})
-                // })
-
-                let screeningQues = Object.assign({}, goalQuestionsNameMap );
-                item.screeningQuestions && item.screeningQuestions.forEach(sqitem=>{
-                    let answer = sqitem.answer;
-                    if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
-                        answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
+                let onboardingQues = Object.assign({}, questionNamesMap );
+                user.onboardingQuestions.forEach(item=>{
+                    let answer = item.answer;
+                    if(onboardingQuestionMap[item.onboardingQuestion].question["type"] === "multiple-choice-multi-select"){
+                        answer =onboardingQuestionMap[item.onboardingQuestion].question.options.filter(opItem=>item.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
                     }
-                    if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-single-select"){
-                        answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).value
+                    if(onboardingQuestionMap[item.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
+                        answer =onboardingQuestionMap[item.onboardingQuestion].question.options.find(opItem=>String(item.answer) === String(opItem._id)).value
                     }
-                    screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
+                    onboardingQues[String(onboardingQuestionMap[item.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, onboardingQuestionMap[item.onboardingQuestion], {answer})
                 })
+
+                // let screeningQues = Object.assign({}, goalQuestionsNameMap );
+                // item.screeningQuestions && item.screeningQuestions.forEach(sqitem=>{
+                //     let answer = sqitem.answer;
+                //     if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
+                //         answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
+                //     }
+                //     if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-single-select"){
+                //         answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).value
+                //     }
+                //     screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
+                // })
                 
                 let userObject = {
                     firstName: user && user.name.first || "-",
@@ -223,11 +187,11 @@ async function main(){
                     waist: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_waist_hip_ratio && user.medicalProfile.recentVitals.vital_waist_hip_ratio.value || "-",
                     BP: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_bp || "-",
                 };
-                Object.assign(userObject,  screeningQues)
+                Object.assign(userObject, onboardingQues)
                 return userObject
             })
             
-            fs.writeFileSync(`users-cohort-2-non-associated-participants-onboarding-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+            fs.writeFileSync(`users-cohort-2-onboarding-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
             process.exit(0);
     
     } catch (e) {

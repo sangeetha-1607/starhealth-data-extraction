@@ -124,11 +124,11 @@ async function main(){
                         preserveNullAndEmptyArrays: false,
                     },
                 },
-                {
-                  $match: {
-                      "careProgrammeQuestions.status": "active"
-                  }
-                }
+                // {
+                //   $match: {
+                //       "careProgrammeQuestions.status": "active"
+                //   }
+                // }
               ];
             const goalQuestions = await careProgrammeModel.aggregate(cpqAgg).toArray();
             let goalQuestionsNameMap = {}

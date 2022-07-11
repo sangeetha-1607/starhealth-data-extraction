@@ -121,7 +121,7 @@ async function main(){
                 goalQuestionsNameMap[String(item.careProgrammeQuestions.question.title.toLowerCase().split(" ").join("_"))]={}
                 return acc; 
             },{});
-
+console.log("goalQuestionsMap", JSON.stringify(goalQuestionsMap, null, 2))
             const patients = userCareprogramsplans.map((item)=>{
                 const user = item.careProgrammePlan && item.careProgrammePlan.userCareProgramPlan && item.careProgrammePlan.userCareProgramPlan.user
                 const currDate = new Date()
@@ -135,11 +135,11 @@ async function main(){
                 let screeningQues = Object.assign({}, goalQuestionsNameMap );
                 item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.forEach(sqitem=>{
                     let answer = sqitem.answer;
-                    console.log("Start====================")
-                    console.log("user.name.first", user.name.first)
-                    console.log("goalQuestionsMap[sqitem.careProgrammeQuestion]", JSON.stringify(goalQuestionsMap[sqitem.careProgrammeQuestion], null, 2))
-                    console.log("sqitem", JSON.stringify(sqitem, null, 2))
-                    console.log("====================end")
+                    // console.log("Start====================")
+                    // console.log("user.name.first", user.name.first)
+                    // console.log("goalQuestionsMap[sqitem.careProgrammeQuestion]", JSON.stringify(goalQuestionsMap[sqitem.careProgrammeQuestion], null, 2))
+                    // console.log("sqitem", JSON.stringify(sqitem, null, 2))
+                    // console.log("====================end")
                     if(goalQuestionsMap[sqitem.careProgrammeQuestion]){
                       if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
                         answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>-1).map(i=>i.value).join(", ")

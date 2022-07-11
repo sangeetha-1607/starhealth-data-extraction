@@ -134,12 +134,13 @@ async function main(){
                 const bmi = (height && weight) && Number.parseFloat(Number.parseFloat((weight/(height*height))*10000).toFixed(2));
 
                 let screeningQues = Object.assign({}, goalQuestionsNameMap );
+                // console.log("item.careProgrammePlan.userCareProgramPlan.screeningQuestions", item.careProgrammePlan.userCareProgramPlan.screeningQuestions && JSON.stringify(item.careProgrammePlan.userCareProgramPlan.screeningQuestions[0], null, 2))
                 item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.forEach(sqitem=>{
                     let answer = sqitem.answer;
                     // console.log("Start====================")
                     // console.log("user.name.first", user.name.first)
                     // console.log("goalQuestionsMap[sqitem.careProgrammeQuestion]", JSON.stringify(goalQuestionsMap[sqitem.careProgrammeQuestion], null, 2))
-                    console.log("sqitem", JSON.stringify(sqitem, null, 2))
+                    
                     // console.log("====================end")
                     if(goalQuestionsMap[sqitem.careProgrammeQuestion]){
                       if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){

@@ -73,23 +73,6 @@ async function main(){
               }
             ];
             const userCareprogramsplans = await careProgrammeModel.aggregate(cpAgg).toArray()
-            // const obqAgg = [
-            //     {
-            //       $lookup: {
-            //         from: "questions",
-            //         localField: "question",
-            //         foreignField: "_id",
-            //         as: "question",
-            //       },
-            //     },
-            //     {
-            //       $unwind: {
-            //         path: "$question",
-            //         preserveNullAndEmptyArrays: false,
-            //       },
-            //     }
-            //   ];
-            // const onboardingQuestions = await onboardingQuestionsModel.aggregate(obqAgg).toArray()
             const cpqAgg = [
                 {
                   $match: {
@@ -124,21 +107,15 @@ async function main(){
                         preserveNullAndEmptyArrays: false,
                     },
                 },
-                // {
-                //   $match: {
-                //       "careProgrammeQuestions.status": "active"
-                //   }
-                // }
+                {
+                  $match: {
+                      "careProgrammeQuestions.status": "active"
+                  }
+                }
               ];
             const goalQuestions = await careProgrammeModel.aggregate(cpqAgg).toArray();
             let goalQuestionsNameMap = {}
-            // let questionNamesMap = {}
-            
-            // const onboardingQuestionMap = onboardingQuestions.reduce((acc, item)=>{
-            //     acc[String(item._id)] = JSON.parse(JSON.stringify(item));
-            //     questionNamesMap[String(item.question.title.toLowerCase().split(" ").join("_"))]={}
-            //     return acc; 
-            // },{});
+
             const goalQuestionsMap = goalQuestions.reduce((acc, item)=>{
                 acc[String(item.careProgrammeQuestions._id)] = JSON.parse(JSON.stringify(item.careProgrammeQuestions));
                 goalQuestionsNameMap[String(item.careProgrammeQuestions.question.title.toLowerCase().split(" ").join("_"))]={}
@@ -154,20 +131,9 @@ async function main(){
                 const height = user.medicalProfile && user.medicalProfile.height;
                 const weight = user.medicalProfile && user.medicalProfile.weight ? user.medicalProfile.weight : user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_body_weight;
                 const bmi = (height && weight) && Number.parseFloat(Number.parseFloat((weight/(height*height))*10000).toFixed(2));
-                // let onboardingQues = Object.assign({}, questionNamesMap );
-                // user.onboardingQuestions.forEach(item=>{
-                //     let answer = item.answer;
-                //     if(onboardingQuestionMap[item.onboardingQuestion].question["type"] === "multiple-choice-multi-select"){
-                //         answer =onboardingQuestionMap[item.onboardingQuestion].question.options.filter(opItem=>item.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
-                //     }
-                //     if(onboardingQuestionMap[item.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
-                //         answer =onboardingQuestionMap[item.onboardingQuestion].question.options.find(opItem=>String(item.answer) === String(opItem._id)).value
-                //     }
-                //     onboardingQues[String(onboardingQuestionMap[item.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, onboardingQuestionMap[item.onboardingQuestion], {answer})
-                // })
 
                 let screeningQues = Object.assign({}, goalQuestionsNameMap );
-                item.screeningQuestions && item.screeningQuestions.forEach(sqitem=>{
+                item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.forEach(sqitem=>{
                     let answer = sqitem.answer;
                     if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
                         answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>-1).map(i=>i.value).join(", ")

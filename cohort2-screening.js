@@ -135,13 +135,20 @@ async function main(){
                 let screeningQues = Object.assign({}, goalQuestionsNameMap );
                 item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.forEach(sqitem=>{
                     let answer = sqitem.answer;
-                    if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
+                    console.log("Start====================")
+                    console.log("user.name.first", user.name.first)
+                    console.log("goalQuestionsMap[sqitem.careProgrammeQuestion]", JSON.stringify(goalQuestionsMap[sqitem.careProgrammeQuestion], null, 2))
+                    console.log("sqitem", JSON.stringify(sqitem, null, 2))
+                    console.log("====================end")
+                    if(goalQuestionsMap[sqitem.careProgrammeQuestion]){
+                      if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
                         answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>-1).map(i=>i.value).join(", ")
+                      }
+                      if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-single-select"){
+                          answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).value
+                      }
+                      screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
                     }
-                    if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-single-select"){
-                        answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).value
-                    }
-                    screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
                 })
                 
                 let userObject = {
@@ -193,7 +200,7 @@ async function main(){
                 return userObject
             })
             
-            fs.writeFileSync(`users-cohort-2-screening-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+            // fs.writeFileSync(`users-cohort-2-screening-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
             process.exit(0);
     
     } catch (e) {

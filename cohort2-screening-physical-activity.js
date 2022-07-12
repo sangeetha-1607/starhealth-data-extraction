@@ -122,7 +122,9 @@ async function main(){
                   }
                 }
               ];
+              console.log("cpqAgg", JSON.stringify(cpqAgg, null, 2))
             const goalQuestions = await careProgrammeModel.aggregate(cpqAgg).toArray();
+            console.log("goalQuestions", JSON.stringify(goalQuestions, null, 2))
             let goalQuestionsNameMap = {}
 
             const goalQuestionsMap = goalQuestions.reduce((acc, item)=>{
@@ -204,7 +206,7 @@ async function main(){
                 return userObject
             })
             
-            fs.writeFileSync(`cohort-2-screening-physical-activity-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+            // fs.writeFileSync(`cohort-2-screening-physical-activity-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
             process.exit(0);
     
     } catch (e) {

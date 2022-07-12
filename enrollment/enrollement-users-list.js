@@ -120,7 +120,7 @@ async function main(){
                 const enrollmentDate = item.userCareProgramPlan.createdAt && new Date(item.userCareProgramPlan.createdAt)
                 const enrllDate = enrollmentDate && enrollmentDate.getDate()+"-"+(enrollmentDate.getMonth()+1)+"-"+enrollmentDate.getFullYear();
                 
-                const {role: approvedByRole, reference:approvedByReference} = item && item.userCareProgramPlan && item.userCareProgramPlan.approvedBy && item.userCareProgramPlan.approvedBy
+                const {role: approvedByRole, reference:approvedByReference} = item && item.userCareProgramPlan && item.userCareProgramPlan.approvedBy && item.userCareProgramPlan.approvedBy || {}
                 
                 let approvedBy;
                 if(approvedByRole === 'administrator'){

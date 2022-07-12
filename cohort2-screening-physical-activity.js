@@ -16,6 +16,7 @@ async function main(){
             console.log("MongoDB connected!!!")
             const database = client.db("cmp-prod");
             const careProgrammeModel  = database.collection("care-programmes");
+            const questionsModel  = database.collection("questions");
             // const onboardingQuestionsModel  = database.collection("onboarding-questions");
             
             const cpAgg = [
@@ -106,7 +107,7 @@ async function main(){
             ];
 
             console.log("cpqAgg", cpqAgg[0]["$match"]["title"]["$in"])
-            const goalQuestions = await careProgrammeModel.aggregate(cpqAgg).toArray();
+            const goalQuestions = await questionsModel.aggregate(cpqAgg).toArray();
             console.log("goalQuestions", JSON.stringify(goalQuestions, null, 2))
             let goalQuestionsNameMap = {}
 

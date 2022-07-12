@@ -112,7 +112,7 @@ async function main(){
               (a, i) => Object.assign(a, { [String(i._id)]: i }),
               {}
             );
-            const patients = userCareprogramsplans.map(async (item)=>{
+            const patients = await Promise.all(userCareprogramsplans.map(async (item)=>{
                 const careProgram = item.userCareProgramPlan && item.userCareProgramPlan.careProgrammePlan && item.userCareProgramPlan.careProgrammePlan.careProgramme
                 const user = item
                 const dobDate = user.dob && new Date(user.dob);
@@ -163,7 +163,7 @@ async function main(){
                 };
                 console.log("userObject", userObject)
                 return userObject
-            })
+            }))
 
             console.log("patients", patients[10])
             const workbook = XLSX.utils.book_new();
@@ -178,7 +178,7 @@ async function main(){
             // console.log('Dir ectory created successfully!', dirName);
             // XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `user-enrolment-list-xlsx-${new Date().getTime()}.xlsx`))
             // fs.writeFileSync(path.resolve(__dirname, dirName, `user-enrolment-list-json-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
-            fs.writeFileSync(`${dirName}/unique-user-list-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+            // fs.writeFileSync(`${dirName}/unique-user-list-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
             // fs.writeFileSync(`unique-user-list-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
             process.exit(0);
     

@@ -105,7 +105,7 @@ async function main(){
               }
             ];
 
-            console.log("cpqAgg", JSON.stringify(cpqAgg, null, 2))
+            console.log("cpqAgg", cpqAgg)
             const goalQuestions = await careProgrammeModel.aggregate(cpqAgg).toArray();
             console.log("goalQuestions", JSON.stringify(goalQuestions, null, 2))
             let goalQuestionsNameMap = {}

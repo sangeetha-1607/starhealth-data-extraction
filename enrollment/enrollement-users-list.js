@@ -175,7 +175,7 @@ async function main(){
             console.log("patients", patients.length)
             fs.mkdir(path.join(__dirname, dirName), (err) => {
                 if (err) {
-                    return console.error(err);
+                    console.error(err);
                 }
                 console.log('Directory created successfully!', dirName);
                 console.log(path.resolve(__dirname, dirName, `user-enrolment-list-xlsx-${new Date().getTime()}.xlsx`))

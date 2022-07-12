@@ -74,55 +74,38 @@ async function main(){
             ];
             const userCareprogramsplans = await careProgrammeModel.aggregate(cpAgg).toArray()
             let physicalActivityQuestions = [
-              /How many days a week do you exercise?/i,
-              /How many minutes do you exercise?/i,
-              /What exercise do you perform?/i,
-              /How long do you spend sitting in a day (approximately)?/i,
-              /How many steps  do you walk in a day (approximately)?/i,
-              /What kind of job do you do?/i
+              new RegExp("How many days a week do you exercise?", "i"),
+              new RegExp("How many minutes do you exercise?", "i"),
+              new RegExp("What exercise do you perform?", "i"),
+              new RegExp("How long do you spend sitting in a day (approximately)?", "i"),
+              new RegExp("How many steps  do you walk in a day (approximately)?", "i"),
+              new RegExp("What kind of job do you do?", "i")
             ];
+
+            
             const cpqAgg = [
-                {
-                  $match: {
-                    name: { $regex: "^Condition Management Program$" },
-                  },
+              {
+                $match: {
+                  title: { $in: physicalActivityQuestions },
                 },
-                {
-                  $lookup: {
-                    from: "care-programme-questions",
-                    localField: "_id",
-                    foreignField: "careProgramme",
-                    as: "careProgrammeQuestions",
-                  },
+              },
+              {
+                $lookup: {
+                  from: "care-programme-questions",
+                  localField: "_id",
+                  foreignField: "question",
+                  as: "careProgrammeQuestions",
                 },
-                {
-                  $unwind: {
-                    path: "$careProgrammeQuestions",
-                    preserveNullAndEmptyArrays: false,
-                  },
+              },
+              {
+                $unwind: {
+                  path: "$careProgrammeQuestions",
+                  preserveNullAndEmptyArrays: false,
                 },
-                {
-                    $lookup: {
-                      from: "questions",
-                      localField: "careProgrammeQuestions.question",
-                      foreignField: "_id",
-                      as: "careProgrammeQuestions.question",
-                    },
-                },
-                {
-                    $unwind: {
-                        path: "$careProgrammeQuestions.question",
-                        preserveNullAndEmptyArrays: false,
-                    },
-                },
-                {
-                  $match: {
-                      "careProgrammeQuestions.status": "active",
-                      "careProgrammeQuestions.question.title": {$in: physicalActivityQuestions}
-                  }
-                }
-              ];
-              console.log("cpqAgg", JSON.stringify(cpqAgg, null, 2))
+              }
+            ];
+
+            console.log("cpqAgg", JSON.stringify(cpqAgg, null, 2))
             const goalQuestions = await careProgrammeModel.aggregate(cpqAgg).toArray();
             console.log("goalQuestions", JSON.stringify(goalQuestions, null, 2))
             let goalQuestionsNameMap = {}

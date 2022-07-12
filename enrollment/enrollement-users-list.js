@@ -23,7 +23,7 @@ async function main(){
             const administratorsModel  = database.collection("administrators");
             const doctorsModel  = database.collection("doctors");
             const ahpsModel  = database.collection("ahps");
-            const chatUserModel  = database.collection("ahps");
+            const chatUserModel  = database.collection("chat-users");
             
             const chatMessagesAgg = [
               {

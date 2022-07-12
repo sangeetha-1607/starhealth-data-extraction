@@ -160,7 +160,7 @@ async function main(){
             const onboardingQuestionsModel  = database.collection("onboarding-questions");
 
             const [userCareprogramsplans, chatUsers, careProgrammeQuestions, onboardingQuestions] = await Promise.all([
-              usersModel.aggregate(cpAgg).toArray(), 
+              usersModel.aggregate(cpAgg, {allowDiskUse: true}).toArray(), 
               chatUserModel.aggregate(chatMessagesAgg).toArray(),
             ])
             let chatUsersMap = chatUsers.reduce(

@@ -21,7 +21,7 @@ async function main(){
             const userCareprogramsplans = await usersModel.find().toArray()
        
             const patients = userCareprogramsplans.map((item)=>{
-                const user = item.userData
+                const user = item
                 const dobDate = user.dob && new Date(user.dob);
                 const dob = dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear();
                 let userObject = {

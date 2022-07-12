@@ -112,8 +112,8 @@ async function main(){
             let goalQuestionsNameMap = {}
 
             const goalQuestionsMap = goalQuestions.reduce((acc, item)=>{
-                acc[String(item.careProgrammeQuestions._id)] = JSON.parse(JSON.stringify(item.careProgrammeQuestions));
-                goalQuestionsNameMap[String(item.careProgrammeQuestions.question.title.toLowerCase().split(" ").join("_"))]={}
+                acc[String(item.careProgrammeQuestions._id)] = JSON.parse(JSON.stringify(item));
+                goalQuestionsNameMap[String(item.question.title.toLowerCase().split(" ").join("_"))]={}
                 return acc; 
             },{});
             const patients = userCareprogramsplans.map((item)=>{

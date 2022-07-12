@@ -112,6 +112,7 @@ async function main(){
               (a, i) => Object.assign(a, { [String(i._id)]: i }),
               {}
             );
+            console.log("chatUsersMap", chatUsersMap)
             const patients = await Promise.all(userCareprogramsplans.map(async (item)=>{
                 const careProgram = item.userCareProgramPlan && item.userCareProgramPlan.careProgrammePlan && item.userCareProgramPlan.careProgrammePlan.careProgramme
                 const user = item
@@ -149,8 +150,8 @@ async function main(){
                   ]);
                   approvedBy = ahp.AhpProfile
                 }
-                console.log("approvedBy && approvedBy.name", approvedBy && approvedBy.name)
-                console.log("chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count", chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count)
+                // console.log("approvedBy && approvedBy.name", approvedBy && approvedBy.name)
+                // console.log("chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count", chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count)
                 let userObject = {
                     firstName: user && user.name.first || "-",
                     lastName: user && user.name.last || "-",

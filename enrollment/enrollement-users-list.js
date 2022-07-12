@@ -112,7 +112,7 @@ async function main(){
               (a, i) => Object.assign(a, { [String(i._id)]: i }),
               {}
             );
-            const patients = userCareprogramsplans.map((item)=>{
+            const patients = userCareprogramsplans.map(async (item)=>{
                 const careProgram = item.userCareProgramPlan && item.userCareProgramPlan.careProgrammePlan && item.userCareProgramPlan.careProgrammePlan.careProgramme
                 const user = item
                 const dobDate = user.dob && new Date(user.dob);

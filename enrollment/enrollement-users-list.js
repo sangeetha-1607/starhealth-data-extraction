@@ -175,11 +175,15 @@ async function main(){
                 if (err) {
                     return console.error(err);
                 }
-                console.log('Directory created successfully!');
-                XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `user-enrolment-list-${new Date().getTime()}.xlsx`))
-
-                fs.writeFileSync(path.resolve(__dirname, dirName, `user-enrolment-list-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
-
+                console.log('Directory created successfully!', dirName);
+                console.log(path.resolve(__dirname, dirName, `user-enrolment-list-xlsx-${new Date().getTime()}.xlsx`))
+                XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `user-enrolment-list-xlsx-${new Date().getTime()}.xlsx`))
+                // path1 = path.resolve("users/admin", "readme.md");
+                // console.log(path1)
+                // G:\tutorials\nodejs-path-resolve\users\admin\readme.md
+                console.log(path.resolve(__dirname, dirName, `user-enrolment-list-json-${new Date().getTime()}.json`))
+                fs.writeFileSync(path.resolve(__dirname, dirName, `user-enrolment-list-json-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
+                fs.writeFileSync(`${dirName}/unique-user-list-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
                 process.exit(0);
             });
     

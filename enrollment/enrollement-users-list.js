@@ -149,6 +149,8 @@ async function main(){
                   ]);
                   approvedBy = ahp.AhpProfile
                 }
+                console.log("approvedBy && approvedBy.name", approvedBy && approvedBy.name)
+                console.log("chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count", chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count)
                 let userObject = {
                     firstName: user && user.name.first || "-",
                     lastName: user && user.name.last || "-",
@@ -159,9 +161,8 @@ async function main(){
                     enrolledRequestDate: enrllDate || "-",
                     enrolmentStatus: item && item.userCareProgramPlan && item.userCareProgramPlan.state || "-",
                     approvedBy: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
-                    chatsCount: chatUsersMap[user._id] && chatUsersMap[user._id].count || "-"
+                    chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-"
                 };
-                console.log("userObject", userObject)
                 return userObject
             }))
 

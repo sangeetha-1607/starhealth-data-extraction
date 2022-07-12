@@ -234,8 +234,8 @@ async function main(){
                     enrolmentStatus: item && item.userCareProgramPlan && item.userCareProgramPlan.state || "-",
                     approvedBy: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
                     chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
-                    screeningQuestionPercentage: screeningQuestionCompletedPercentage || "-",
-                    onboardingQuestionPercentage: onboardingQuestionCompletionPercentage || "-"
+                    screeningQuestionPercentage: screeningQuestionCompletedPercentage+" %" || "0%",
+                    onboardingQuestionPercentage: onboardingQuestionCompletionPercentage+" %" || "0%"
                 };
                 return userObject
             }))

@@ -18,7 +18,7 @@ async function main(){
             await client.connect();
             console.log("MongoDB connected!!!")
             const database = client.db("cmp-prod");
-            const careProgrammeModel  = database.collection("care-programmes");
+            const careProgrammeQuestionsModel  = database.collection("care-programme-questions");
             const usersModel  = database.collection("users");
             const administratorsModel  = database.collection("administrators");
             const doctorsModel  = database.collection("doctors");
@@ -162,6 +162,8 @@ async function main(){
             const [userCareprogramsplans, chatUsers, careProgrammeQuestions, onboardingQuestions] = await Promise.all([
               usersModel.aggregate(cpAgg, {allowDiskUse: true}).toArray(), 
               chatUserModel.aggregate(chatMessagesAgg).toArray(),
+              careProgrammeQuestionsModel.find().toArray(),
+              onboardingQuestionsModel.find({ status: "active" }).toArray()
             ])
             let chatUsersMap = chatUsers.reduce(
               (a, i) => Object.assign(a, { [String(i._id)]: i }),

@@ -171,7 +171,7 @@ async function main(){
             );
             const patients = await Promise.all(userCareprogramsplans.map(async (item)=>{
                 const careProgram = item.userData.userCareProgramPlan && item.userData.userCareProgramPlan.careProgrammePlan && item.userData.userCareProgramPlan.careProgrammePlan.careProgramme
-                const user = item
+                const user = item.userData
                 const dobDate = user.dob && new Date(user.dob);
                 const dob = dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear();
                 const enrollmentDate = item.userData.userCareProgramPlan.createdAt && new Date(item.userData.userCareProgramPlan.createdAt)

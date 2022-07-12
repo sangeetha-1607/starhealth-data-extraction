@@ -189,7 +189,7 @@ async function main(){
         console.error(e);
         process.exit(0);
     } finally {
-        await client.close();
+        // await client.close();
         process.exit(0);
     }
 }

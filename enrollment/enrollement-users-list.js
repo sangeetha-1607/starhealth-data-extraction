@@ -194,7 +194,7 @@ async function main(){
 
                 const onboardingQuestionCompletionPercentage = onboardingQuestions.length > 0 ? Math.floor( (answeredOnboardingQuestionsCount.length / onboardingQuestions.length) * 100 ) : 0;
 
-                const {role: approvedByRole, reference:approvedByReference} = item && item.userCareProgramPlan && item.userCareProgramPlan.approvedBy && item.userCareProgramPlan.approvedBy || {}
+                const {role: approvedByRole, reference:approvedByReference} = item && item.userData.userCareProgramPlan && item.userData.userCareProgramPlan.approvedBy && item.userData.userCareProgramPlan.approvedBy || {}
                 
                 let approvedBy;
                 if(approvedByRole === 'administrator'){

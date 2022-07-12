@@ -170,15 +170,15 @@ async function main(){
             XLSX.utils.book_append_sheet(workbook, worksheet);
    
             let currTime = new Date()
-            
-            fs.mkdir(path.join(__dirname, currTime.toISOString().split("T").join("-").split(":").join("-").split(".")[0]), (err) => {
+            let dirName = currTime.toISOString().split("T").join("-").split(":").join("-").split(".")[0]
+            fs.mkdir(path.join(__dirname, dirName), (err) => {
                 if (err) {
                     return console.error(err);
                 }
                 console.log('Directory created successfully!');
-                XLSX.writeFile(workbook, path.resolve(__dirname, `user-enrolment-list-${new Date().getTime()}.xlsx`))
+                XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `user-enrolment-list-${new Date().getTime()}.xlsx`))
 
-                fs.writeFileSync(path.resolve(__dirname, `user-enrolment-list-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
+                fs.writeFileSync(path.resolve(__dirname, dirName, `user-enrolment-list-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
 
                 process.exit(0);
             });

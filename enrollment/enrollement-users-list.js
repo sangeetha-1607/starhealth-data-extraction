@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var ObjectID = require('mongodb').ObjectID;
+var ObjectID = require('mongodb').ObjectId;
 const path = require("path");
 const XLSX = require('xlsx');
 const fs = require('fs');
@@ -124,13 +124,13 @@ async function main(){
                 
                 let approvedBy;
                 if(approvedByRole === 'administrator'){
-                  approvedBy = administratorsModel.findOne({_id: ObjectID(approvedByReference)})
+                  approvedBy = await administratorsModel.findOne({_id: ObjectID(approvedByReference)})
                 }
                 else if(approvedByRole === 'doctor'){
-                  approvedBy = doctorsModel.findOne({_id: ObjectID(approvedByReference)})
+                  approvedBy = await doctorsModel.findOne({_id: ObjectID(approvedByReference)})
                 }
                 else if(approvedByRole === 'ahp'){
-                  let ahp = ahpsModel.aggregate([
+                  let ahp = await ahpsModel.aggregate([
                     { $match: { _id: ObjectID(approvedByReference) } },
                     {
                       $lookup: {

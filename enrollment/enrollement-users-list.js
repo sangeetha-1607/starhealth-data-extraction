@@ -159,7 +159,7 @@ async function main(){
                     enrolledRequestDate: enrllDate || "-",
                     enrolmentStatus: item && item.userCareProgramPlan && item.userCareProgramPlan.state || "-",
                     approvedBy: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
-                    chatsCount: chatUsersMap[user._id].count
+                    chatsCount: chatUsersMap[user._id] && chatUsersMap[user._id].count || "-"
                 };
                 return userObject
             })

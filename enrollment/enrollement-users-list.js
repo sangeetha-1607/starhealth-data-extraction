@@ -104,10 +104,65 @@ async function main(){
                   path: "$userCareProgramPlan.careProgrammePlan.careProgramme",
                   preserveNullAndEmptyArrays: true,
                 },
-              }
+              },
+              {
+                $unwind: {
+                  path: "$userCareProgramPlan.screeningQuestions",
+                  preserveNullAndEmptyArrays: true,
+                },
+              },
+              {
+                $lookup: {
+                  from: "care-programme-questions",
+                  localField: "userCareProgramPlan.screeningQuestions.careProgrammeQuestion",
+                  foreignField: "_id",
+                  as: "userCareProgramPlan.screeningQuestions.careProgrammeQuestion",
+                },
+              },
+              {
+                $unwind: {
+                  path: "$userCareProgramPlan.screeningQuestions.careProgrammeQuestion",
+                  preserveNullAndEmptyArrays: true,
+                },
+              },
+              {
+                $unwind: {
+                  path: "$onboardingQuestions",
+                  preserveNullAndEmptyArrays: true,
+                },
+              },
+              {
+                $lookup: {
+                  from: "onboarding-questions",
+                  localField: "onboardingQuestions.onboardingQuestion",
+                  foreignField: "_id",
+                  as: "onboardingQuestions.onboardingQuestion",
+                },
+              },
+              {
+                $unwind: {
+                  path: "$onboardingQuestions.onboardingQuestion",
+                  preserveNullAndEmptyArrays: true,
+                },
+              },
+              {
+                $group:{
+                  _id: "$_id",
+                  userData: {$first: "$$ROOT"},
+                  screeningQuestions: {$addToSet: "$userCareProgramPlan.screeningQuestions"},
+                  onboardingQuestions: {$addToSet: "$onboardingQuestions.onboardingQuestion"}
+                }
+              },
             ];
+
             
-            const [userCareprogramsplans, chatUsers] = await Promise.all([usersModel.aggregate(cpAgg).toArray(), chatUserModel.aggregate(chatMessagesAgg).toArray()])
+
+            const onboardingQuestionsModel  = database.collection("onboarding-questions");
+
+            const [userCareprogramsplans, chatUsers, careProgrammeQuestions, onboardingQuestions] = await Promise.all([
+              usersModel.aggregate(cpAgg).toArray(), 
+              chatUserModel.aggregate(chatMessagesAgg).toArray(),
+            ])
             let chatUsersMap = chatUsers.reduce(
               (a, i) => Object.assign(a, { [String(i._id)]: i }),
               {}
@@ -120,6 +175,23 @@ async function main(){
                 const enrollmentDate = item.userCareProgramPlan.createdAt && new Date(item.userCareProgramPlan.createdAt)
                 const enrllDate = enrollmentDate && enrollmentDate.getDate()+"-"+(enrollmentDate.getMonth()+1)+"-"+enrollmentDate.getFullYear();
                 
+                let answeredScreeningQuestionsCount = item.screeningQuestions.filter((item) => {
+                  return (
+                    item.careProgrammeQuestion &&
+                    item.careProgrammeQuestion.status === "active"
+                  );
+                });
+                const screeningQuestionCompletedPercentage = careProgrammeQuestions.length > 0 ? Math.floor( (answeredScreeningQuestionsCount.length / careProgrammeQuestions.length) * 100 ) : 0;
+
+                let answeredOnboardingQuestionsCount = item.onboardingQuestions.filter((item) => {
+                  return (
+                    item.onboardingQuestion &&
+                    item.onboardingQuestion.status === "active"
+                  );
+                });
+
+                const onboardingQuestionCompletionPercentage = onboardingQuestions.length > 0 ? Math.floor( (answeredOnboardingQuestionsCount.length / onboardingQuestions.length) * 100 ) : 0;
+
                 const {role: approvedByRole, reference:approvedByReference} = item && item.userCareProgramPlan && item.userCareProgramPlan.approvedBy && item.userCareProgramPlan.approvedBy || {}
                 
                 let approvedBy;
@@ -159,7 +231,9 @@ async function main(){
                     enrolledRequestDate: enrllDate || "-",
                     enrolmentStatus: item && item.userCareProgramPlan && item.userCareProgramPlan.state || "-",
                     approvedBy: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
-                    chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-"
+                    chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
+                    screeningQuestionPercentage: screeningQuestionCompletedPercentage || "-",
+                    onboardingQuestionPercentage: onboardingQuestionCompletionPercentage || "-"
                 };
                 return userObject
             }))

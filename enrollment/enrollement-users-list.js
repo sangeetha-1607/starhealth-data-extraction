@@ -161,6 +161,7 @@ async function main(){
                     approvedBy: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
                     chatsCount: chatUsersMap[user._id] && chatUsersMap[user._id].count || "-"
                 };
+                console.log("userObject", userObject)
                 return userObject
             })
             const workbook = XLSX.utils.book_new();
@@ -171,18 +172,10 @@ async function main(){
    
             let currTime = new Date()
             let dirName = currTime.toISOString().split("T").join("-").split(":").join("-").split(".")[0]
-            console.log("dirName", dirName)
-            console.log("patients", patients.length)
-            fs.mkdirSync(path.join(__dirname, dirName));
-            console.log('Directory created successfully!', dirName);
-            console.log(path.resolve(__dirname, dirName, `user-enrolment-list-xlsx-${new Date().getTime()}.xlsx`))
-            XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `user-enrolment-list-xlsx-${new Date().getTime()}.xlsx`))
-            // path1 = path.resolve("users/admin", "readme.md");
-            // console.log(path1)
-            // G:\tutorials\nodejs-path-resolve\users\admin\readme.md
-            console.log(path.resolve(__dirname, dirName, `user-enrolment-list-json-${new Date().getTime()}.json`))
-            fs.writeFileSync(path.resolve(__dirname, dirName, `user-enrolment-list-json-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
-            fs.writeFileSync(`${dirName}/unique-user-list-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+            // fs.mkdirSync(path.join(__dirname, dirName));
+            // console.log('Directory created successfully!', dirName);
+            // XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `user-enrolment-list-xlsx-${new Date().getTime()}.xlsx`))
+            // fs.writeFileSync(path.resolve(__dirname, dirName, `user-enrolment-list-json-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
             process.exit(0);
     
             

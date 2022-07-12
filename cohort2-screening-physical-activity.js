@@ -113,7 +113,7 @@ async function main(){
 
             const goalQuestionsMap = goalQuestions.reduce((acc, item)=>{
                 acc[String(item.careProgrammeQuestions._id)] = JSON.parse(JSON.stringify(item));
-                goalQuestionsNameMap[String(item.question.title.toLowerCase().split(" ").join("_"))]={}
+                goalQuestionsNameMap[String(item.title.toLowerCase().split(" ").join("_"))]={}
                 return acc; 
             },{});
             const patients = userCareprogramsplans.map((item)=>{
@@ -131,13 +131,13 @@ async function main(){
                 item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.forEach(sqitem=>{
                     let answer = sqitem.answer;
                     if(goalQuestionsMap[sqitem.careProgrammeQuestion]){
-                      if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-multi-select"){
-                        answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>-1).map(i=>i.title).join(", ")
+                      if(goalQuestionsMap[sqitem.careProgrammeQuestion]["type"] === "multiple-choice-multi-select"){
+                        answer =goalQuestionsMap[sqitem.careProgrammeQuestion].options.filter(opItem=>sqitem.answer.indexOf(String(opItem._id))>-1).map(i=>i.title).join(", ")
                       }
-                      if(goalQuestionsMap[sqitem.careProgrammeQuestion].question["type"] === "multiple-choice-single-select"){
-                          answer =goalQuestionsMap[sqitem.careProgrammeQuestion].question.options.find(opItem=>String(sqitem.answer) === String(opItem._id)).title
+                      if(goalQuestionsMap[sqitem.careProgrammeQuestion]["type"] === "multiple-choice-single-select"){
+                          answer =goalQuestionsMap[sqitem.careProgrammeQuestion].options.find(opItem=>String(sqitem.answer) === String(opItem._id)).title
                       }
-                      screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].question.title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
+                      screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
                     }
                 })
                 

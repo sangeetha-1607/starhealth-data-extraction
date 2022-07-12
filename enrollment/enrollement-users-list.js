@@ -112,8 +112,6 @@ async function main(){
               (a, i) => Object.assign(a, { [String(i._id)]: i }),
               {}
             );
-            console.log("chatUsers", chatUsers)
-            console.log("chatUsersMap", chatUsersMap)
             const patients = await Promise.all(userCareprogramsplans.map(async (item)=>{
                 const careProgram = item.userCareProgramPlan && item.userCareProgramPlan.careProgrammePlan && item.userCareProgramPlan.careProgrammePlan.careProgramme
                 const user = item
@@ -151,8 +149,6 @@ async function main(){
                   ]);
                   approvedBy = ahp.AhpProfile
                 }
-                // console.log("approvedBy && approvedBy.name", approvedBy && approvedBy.name)
-                // console.log("chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count", chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count)
                 let userObject = {
                     firstName: user && user.name.first || "-",
                     lastName: user && user.name.last || "-",
@@ -168,7 +164,6 @@ async function main(){
                 return userObject
             }))
 
-            console.log("patients", patients[10])
             const workbook = XLSX.utils.book_new();
             var worksheet = XLSX.utils.json_to_sheet(patients, {
               header: Object.keys(patients[0]),
@@ -177,12 +172,10 @@ async function main(){
    
             let currTime = new Date()
             let dirName = currTime.toISOString().split("T").join("-").split(":").join("-").split(".")[0]
-            // fs.mkdirSync(path.join(__dirname, dirName));
-            // console.log('Dir ectory created successfully!', dirName);
-            // XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `user-enrolment-list-xlsx-${new Date().getTime()}.xlsx`))
-            // fs.writeFileSync(path.resolve(__dirname, dirName, `user-enrolment-list-json-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
-            // fs.writeFileSync(`${dirName}/unique-user-list-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
-            // fs.writeFileSync(`unique-user-list-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+            fs.mkdirSync(path.join(__dirname, dirName));
+            console.log('Directory created successfully!', dirName);
+            XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `user-enrolment-list-xlsx-${new Date().getTime()}.xlsx`))
+            fs.writeFileSync(path.resolve(__dirname, dirName, `user-enrolment-list-json-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
             process.exit(0);
     
             

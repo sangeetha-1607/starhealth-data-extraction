@@ -74,12 +74,12 @@ async function main(){
             ];
             const userCareprogramsplans = await careProgrammeModel.aggregate(cpAgg).toArray()
             let physicalActivityQuestions = [
-              new RegExp("How many days a week do you exercise?", "i"),
-              new RegExp("How many minutes do you exercise?", "i"),
-              new RegExp("What exercise do you perform?", "i"),
-              new RegExp("How long do you spend sitting in a day (approximately)?", "i"),
-              new RegExp("How many steps  do you walk in a day (approximately)?", "i"),
-              new RegExp("What kind of job do you do?", "i")
+              /How many days a week do you exercise?/i,
+              /How many minutes do you exercise?/i,
+              /What exercise do you perform?/i,
+              /How long do you spend sitting in a day (approximately)?/i,
+              /How many steps  do you walk in a day (approximately)?/i,
+              /What kind of job do you do?/i
             ];
             const cpqAgg = [
                 {

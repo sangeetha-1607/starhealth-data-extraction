@@ -112,6 +112,7 @@ async function main(){
               (a, i) => Object.assign(a, { [String(i._id)]: i }),
               {}
             );
+            console.log("chatUsers", chatUsers)
             console.log("chatUsersMap", chatUsersMap)
             const patients = await Promise.all(userCareprogramsplans.map(async (item)=>{
                 const careProgram = item.userCareProgramPlan && item.userCareProgramPlan.careProgrammePlan && item.userCareProgramPlan.careProgrammePlan.careProgramme

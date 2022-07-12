@@ -171,6 +171,8 @@ async function main(){
    
             let currTime = new Date()
             let dirName = currTime.toISOString().split("T").join("-").split(":").join("-").split(".")[0]
+            console.log("dirName", dirName)
+            console.log("patients", patients.length)
             fs.mkdir(path.join(__dirname, dirName), (err) => {
                 if (err) {
                     return console.error(err);

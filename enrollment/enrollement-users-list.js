@@ -1,4 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
+const path = require("path");
+const XLSX = require('xlsx');
 const fs = require('fs');
 
 async function main(){
@@ -17,7 +20,48 @@ async function main(){
             const database = client.db("cmp-prod");
             const careProgrammeModel  = database.collection("care-programmes");
             const usersModel  = database.collection("users");
+            const administratorsModel  = database.collection("administrators");
+            const doctorsModel  = database.collection("doctors");
+            const ahpsModel  = database.collection("ahps");
+            const chatUserModel  = database.collection("ahps");
             
+            const chatMessagesAgg = [
+              {
+                $lookup: {
+                  from: "chat-room-participants",
+                  localField: "_id",
+                  foreignField: "participant",
+                  as: "chatRoomParticipants",
+                },
+              },
+              {
+                $unwind: {
+                  path: "$chatRoomParticipants",
+                  preserveNullAndEmptyArrays: false,
+                },
+              },
+              {
+                $lookup: {
+                  from: "chat-room-messages",
+                  localField: "chatRoomParticipants._id",
+                  foreignField: "sender",
+                  as: "chatRoomParticipants.messages",
+                },
+              },
+              {
+                $unwind: {
+                  path: "$chatRoomParticipants.messages",
+                  preserveNullAndEmptyArrays: false,
+                },
+              },
+              {
+                $group: {
+                  _id: "$id",
+                  count: { $sum: 1 },
+                },
+              },
+            ];
+
             const cpAgg = [
               {
                 $lookup: {
@@ -48,35 +92,64 @@ async function main(){
                 },
               },
               {
-                $group:{
-                  _id: "$_id",
-                  userData: {$first: "$$ROOT"}
-                }
-              },
-              {
                 $lookup: {
                   from: "care-programmes",
-                  localField: "userData.userCareProgramPlan.careProgrammePlan.careProgramme",
+                  localField: "userCareProgramPlan.careProgrammePlan.careProgramme",
                   foreignField: "_id",
-                  as: "userData.userCareProgramPlan.careProgrammePlan.careProgramme",
+                  as: "userCareProgramPlan.careProgrammePlan.careProgramme",
                 },
               },
               {
                 $unwind: {
-                  path: "$userData.userCareProgramPlan.careProgrammePlan.careProgramme",
+                  path: "$userCareProgramPlan.careProgrammePlan.careProgramme",
                   preserveNullAndEmptyArrays: true,
                 },
               }
             ];
-            const userCareprogramsplans = await usersModel.aggregate(cpAgg).toArray()
-       
+            
+            const [userCareprogramsplans, chatUsers] = await Promise.all([usersModel.aggregate(cpAgg).toArray(), chatUserModel.aggregate(chatMessagesAgg).toArray()])
+            let chatUsersMap = chatUsers.reduce(
+              (a, i) => Object.assign(a, { [String(i._id)]: i }),
+              {}
+            );
             const patients = userCareprogramsplans.map((item)=>{
-                const careProgram = item.userData.userCareProgramPlan && item.userData.userCareProgramPlan.careProgrammePlan && item.userData.userCareProgramPlan.careProgrammePlan.careProgramme
-                const user = item.userData
+                const careProgram = item.userCareProgramPlan && item.userCareProgramPlan.careProgrammePlan && item.userCareProgramPlan.careProgrammePlan.careProgramme
+                const user = item
                 const dobDate = user.dob && new Date(user.dob);
                 const dob = dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear();
-                const enrollmentDate = item.userData.userCareProgramPlan.createdAt && new Date(item.userData.userCareProgramPlan.createdAt)
+                const enrollmentDate = item.userCareProgramPlan.createdAt && new Date(item.userCareProgramPlan.createdAt)
                 const enrllDate = enrollmentDate && enrollmentDate.getDate()+"-"+(enrollmentDate.getMonth()+1)+"-"+enrollmentDate.getFullYear();
+                
+                const approvedByRole = item && item.userCareProgramPlan && item.userCareProgramPlan.approvedBy.role
+                const approvedByReference = item && item.userCareProgramPlan && item.userCareProgramPlan.approvedBy.reference;
+                
+                let approvedBy;
+                if(approvedByRole === 'administrator'){
+                  approvedBy = administratorsModel.findOne({_id: ObjectID(approvedByReference)})
+                }
+                else if(approvedByRole === 'doctor'){
+                  approvedBy = doctorsModel.findOne({_id: ObjectID(approvedByReference)})
+                }
+                else if(approvedByRole === 'ahp'){
+                  let ahp = ahpsModel.aggregate([
+                    { $match: { _id: ObjectID(approvedByReference) } },
+                    {
+                      $lookup: {
+                        from: "ahp-profiles",
+                        localField: "AhpProfile",
+                        foreignField: "_id",
+                        as: "AhpProfile",
+                      },
+                    },
+                    {
+                      $unwind: {
+                        path: "$AhpProfile",
+                        preserveNullAndEmptyArrays: true,
+                      },
+                    }
+                  ]);
+                  approvedBy = ahp.AhpProfile
+                }
                 let userObject = {
                     firstName: user && user.name.first || "-",
                     lastName: user && user.name.last || "-",
@@ -84,15 +157,34 @@ async function main(){
                     email: user && user.email || "-",
                     dob: user && dob || "-",
                     careProgramName: careProgram && careProgram.name || "-",
-                    enrolledDate: enrllDate || "-",
-                    status: item.userData && item.userData.userCareProgramPlan && item.userData.userCareProgramPlan.state || "-",
-                    
+                    enrolledRequestDate: enrllDate || "-",
+                    enrolmentStatus: item && item.userCareProgramPlan && item.userCareProgramPlan.state || "-",
+                    approvedBy: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
+                    chatsCount: chatUsersMap[user._id].count
                 };
                 return userObject
             })
+            const workbook = XLSX.utils.book_new();
+            var worksheet = XLSX.utils.json_to_sheet(patients, {
+              header: Object.keys(patients[0]),
+            });
+            XLSX.utils.book_append_sheet(workbook, worksheet);
+   
+            let currTime = new Date()
             
-            fs.writeFileSync(`users-care-program-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
-            process.exit(0);
+            fs.mkdir(path.join(__dirname, currTime.toISOString().split("T").join("-").split(":").join("-").split(".")[0]), (err) => {
+                if (err) {
+                    return console.error(err);
+                }
+                console.log('Directory created successfully!');
+                XLSX.writeFile(workbook, path.resolve(__dirname, `user-enrolment-list-${new Date().getTime()}.xlsx`))
+
+                fs.writeFileSync(path.resolve(__dirname, `user-enrolment-list-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
+
+                process.exit(0);
+            });
+    
+            
     
     } catch (e) {
         console.error(e);

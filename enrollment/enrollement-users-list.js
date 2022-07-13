@@ -176,6 +176,8 @@ async function main(){
                 const dob = dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear();
                 const enrollmentDate = item.userData.userCareProgramPlan.createdAt && new Date(item.userData.userCareProgramPlan.createdAt)
                 const enrllDate = enrollmentDate && enrollmentDate.getDate()+"-"+(enrollmentDate.getMonth()+1)+"-"+enrollmentDate.getFullYear();
+                const startDate = item.userData.userCareProgramPlan.startDate && new Date(item.userData.userCareProgramPlan.startDate)
+                const formattedStartDate = startDate && startDate.getDate()+"-"+(startDate.getMonth()+1)+"-"+startDate.getFullYear();V
                 
                 let answeredScreeningQuestionsCount = item.screeningQuestions.filter((item) => {
                   return (
@@ -233,6 +235,7 @@ async function main(){
                     enrolledRequestDate: enrllDate || "-",
                     enrolmentStatus: item && item.userCareProgramPlan && item.userCareProgramPlan.state || "-",
                     approvedBy: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
+                    startDate: formattedStartDate || "-",
                     chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
                     screeningQuestionPercentage: screeningQuestionCompletedPercentage+" %" || "0%",
                     onboardingQuestionPercentage: onboardingQuestionCompletionPercentage+" %" || "0%"

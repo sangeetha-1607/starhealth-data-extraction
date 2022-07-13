@@ -177,7 +177,7 @@ async function main(){
                 const enrollmentDate = item.userData.userCareProgramPlan.createdAt && new Date(item.userData.userCareProgramPlan.createdAt)
                 const enrllDate = enrollmentDate && enrollmentDate.getDate()+"-"+(enrollmentDate.getMonth()+1)+"-"+enrollmentDate.getFullYear();
                 const startDate = item.userData.userCareProgramPlan.startDate && new Date(item.userData.userCareProgramPlan.startDate)
-                const formattedStartDate = startDate && startDate.getDate()+"-"+(startDate.getMonth()+1)+"-"+startDate.getFullYear();V
+                const formattedStartDate = startDate && startDate.getDate()+"-"+(startDate.getMonth()+1)+"-"+startDate.getFullYear();
                 
                 let answeredScreeningQuestionsCount = item.screeningQuestions.filter((item) => {
                   return (

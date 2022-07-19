@@ -9,7 +9,7 @@ async function main(){
 
 
             const client = new MongoClient(uri, {
-              tlsCAFile: `./rds-combined-ca-bundle.pem`,
+              tlsCAFile: `../rds-combined-ca-bundle.pem`,
               useUnifiedTopology: true 
               })
             await client.connect();

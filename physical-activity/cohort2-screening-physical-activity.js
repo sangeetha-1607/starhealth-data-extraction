@@ -1,4 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
+const path = require("path");
+const XLSX = require('xlsx');
 const fs = require('fs');
 
 async function main(){
@@ -189,9 +191,21 @@ async function main(){
                 Object.assign(userObject,  screeningQues)
                 return userObject
             })
-            
-            fs.writeFileSync(`cohort-2-screening-physical-activity-${new Date().getTime()}.json`, JSON.stringify(patients, null, 2));
+
+            const workbook = XLSX.utils.book_new();
+            var worksheet = XLSX.utils.json_to_sheet(patients, {
+              header: Object.keys(patients[0]),
+            });
+            XLSX.utils.book_append_sheet(workbook, worksheet);
+   
+            let currTime = new Date()
+            let dirName = currTime.toISOString().split("T").join("-").split(":").join("-").split(".")[0]
+            fs.mkdirSync(path.join(__dirname, dirName));
+            console.log('Directory created successfully!', dirName);
+            XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `cohort-2-screening-physical-activity-xlsx-${new Date().getTime()}.xlsx`))
+            fs.writeFileSync(path.resolve(__dirname, dirName, `cohort-2-screening-physical-activity-json-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
             process.exit(0);
+
     
     } catch (e) {
         console.error(e);

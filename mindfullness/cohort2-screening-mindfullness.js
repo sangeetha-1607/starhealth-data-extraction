@@ -129,7 +129,7 @@ async function main(){
                 let screeningQues = Object.assign({}, goalQuestionsNameMap );
                 // console.log("item.careProgrammePlan.userCareProgramPlan.screeningQuestions", item.careProgrammePlan.userCareProgramPlan.screeningQuestions && JSON.stringify(item.careProgrammePlan.userCareProgramPlan.screeningQuestions[0], null, 2))
                 if(item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.length>0){
-                  for( let i=0; i<=item.careProgrammePlan.userCareProgramPlan.screeningQuestions.length;i++){
+                  for( let i=0; i<item.careProgrammePlan.userCareProgramPlan.screeningQuestions.length;i++){
                     let sqitem = item.careProgrammePlan.userCareProgramPlan.screeningQuestions[i];
                     console.log("sqitem", JSON.stringify(sqitem, null, 2))
                     let answer = sqitem.answer;

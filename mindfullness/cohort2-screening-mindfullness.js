@@ -131,6 +131,7 @@ async function main(){
                 if(item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.length>0){
                   for( let i=0; i<=item.careProgrammePlan.userCareProgramPlan.screeningQuestions.length;i++){
                     let sqitem = item.careProgrammePlan.userCareProgramPlan.screeningQuestions[i];
+                    console.log("sqitem", JSON.stringify(sqitem, null, 2))
                     let answer = sqitem.answer;
                     if(goalQuestionsMap[sqitem.careProgrammeQuestion]){
                       if(goalQuestionsMap[sqitem.careProgrammeQuestion]["type"] === "multiple-choice-multi-select"){

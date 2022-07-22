@@ -136,6 +136,8 @@ async function main(){
                       }
                       if(goalQuestionsMap[sqitem.careProgrammeQuestion]["type"] === "multiple-choice-single-select"){
                           answer =goalQuestionsMap[sqitem.careProgrammeQuestion].options.find(opItem=>String(sqitem.answer) === String(opItem._id)).title
+                          console.log("sqitem.answer", sqitem.answer)
+                          console.log("answer", answer)
                       }
                       screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
                     }
@@ -200,11 +202,11 @@ async function main(){
             XLSX.utils.book_append_sheet(workbook, worksheet);
    
             let currTime = new Date()
-            let dirName = currTime.toISOString().split("T").join("-").split(":").join("-").split(".")[0]
-            fs.mkdirSync(path.join(__dirname, dirName));
-            console.log('Directory created successfully!', dirName);
-            XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `cohort-2-screening-mindfullness-xlsx-${new Date().getTime()}.xlsx`))
-            fs.writeFileSync(path.resolve(__dirname, dirName, `cohort-2-screening-mindfullness-json-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
+            // let dirName = currTime.toISOString().split("T").join("-").split(":").join("-").split(".")[0]
+            // fs.mkdirSync(path.join(__dirname, dirName));
+            // console.log('Directory created successfully!', dirName);
+            // XLSX.writeFile(workbook, path.resolve(__dirname, dirName, `cohort-2-screening-mindfullness-xlsx-${new Date().getTime()}.xlsx`))
+            // fs.writeFileSync(path.resolve(__dirname, dirName, `cohort-2-screening-mindfullness-json-${new Date().getTime()}.json`), JSON.stringify(patients, null, 2));
             process.exit(0);
 
     

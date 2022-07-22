@@ -140,6 +140,7 @@ async function main(){
                           console.log("answer", answer)
                       }
                       screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
+                      console.log("Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})", Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer}))
                     }
                 })
                 

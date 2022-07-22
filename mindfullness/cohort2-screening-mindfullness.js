@@ -128,7 +128,7 @@ async function main(){
 
                 let screeningQues = Object.assign({}, goalQuestionsNameMap );
                 // console.log("item.careProgrammePlan.userCareProgramPlan.screeningQuestions", item.careProgrammePlan.userCareProgramPlan.screeningQuestions && JSON.stringify(item.careProgrammePlan.userCareProgramPlan.screeningQuestions[0], null, 2))
-                item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.forEach(async sqitem=>{
+                let updatedScreeningQues = item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.reduce(async (acc, sqitem)=>{
                     let answer = sqitem.answer;
                     if(goalQuestionsMap[sqitem.careProgrammeQuestion]){
                       if(goalQuestionsMap[sqitem.careProgrammeQuestion]["type"] === "multiple-choice-multi-select"){
@@ -139,13 +139,12 @@ async function main(){
                           console.log("sqitem.answer", sqitem.answer)
                           console.log("answer", answer)
                       }
-                      screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
+                      acc[String(goalQuestionsMap[sqitem.careProgrammeQuestion].title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
                       // console.log("Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})", Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer}))
-                      await Promise.resolve()
-                      
+                      return await Promise.resolve(acc)
                     }
-                })
-                console.log("screeningQues", JSON.stringify(screeningQues, null, 2))
+                }, screeningQues)
+                console.log("updatedScreeningQues", JSON.stringify(updatedScreeningQues, null, 2))
                 let userObject = {
                     firstName: user && user.name.first || "-",
                     lastName: user && user.name.last || "-",
@@ -191,7 +190,7 @@ async function main(){
                     waist: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_waist_hip_ratio && user.medicalProfile.recentVitals.vital_waist_hip_ratio.value || "-",
                     BP: user.medicalProfile && user.medicalProfile.recentVitals && user.medicalProfile.recentVitals.vital_bp || "-",
                 };
-                Object.assign(userObject,  screeningQues)
+                Object.assign(userObject,  updatedScreeningQues)
                 return userObject
             })
             

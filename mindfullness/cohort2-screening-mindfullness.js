@@ -128,7 +128,7 @@ async function main(){
 
                 let screeningQues = Object.assign({}, goalQuestionsNameMap );
                 // console.log("item.careProgrammePlan.userCareProgramPlan.screeningQuestions", item.careProgrammePlan.userCareProgramPlan.screeningQuestions && JSON.stringify(item.careProgrammePlan.userCareProgramPlan.screeningQuestions[0], null, 2))
-                item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.forEach(sqitem=>{
+                item.careProgrammePlan.userCareProgramPlan.screeningQuestions && item.careProgrammePlan.userCareProgramPlan.screeningQuestions.forEach(async sqitem=>{
                     let answer = sqitem.answer;
                     if(goalQuestionsMap[sqitem.careProgrammeQuestion]){
                       if(goalQuestionsMap[sqitem.careProgrammeQuestion]["type"] === "multiple-choice-multi-select"){
@@ -140,10 +140,12 @@ async function main(){
                           console.log("answer", answer)
                       }
                       screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
-                      console.log("Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})", Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer}))
+                      // console.log("Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})", Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer}))
+                      await Promise.resolve()
+                      
                     }
                 })
-                
+                console.log("screeningQues", JSON.stringify(screeningQues, null, 2))
                 let userObject = {
                     firstName: user && user.name.first || "-",
                     lastName: user && user.name.last || "-",

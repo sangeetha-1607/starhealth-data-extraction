@@ -139,7 +139,7 @@ async function main(){
                       if(goalQuestionsMap[sqitem.careProgrammeQuestion]["type"] === "multiple-choice-single-select"){
                           answer =goalQuestionsMap[sqitem.careProgrammeQuestion].options.find(opItem=>String(sqitem.answer) === String(opItem._id)).title
                       }
-                      screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].title.toLowerCase().split(" ").join("_"))] = Object.assign({}, goalQuestionsMap[sqitem.careProgrammeQuestion], {answer})
+                      screeningQues[String(goalQuestionsMap[sqitem.careProgrammeQuestion].title.toLowerCase().split(" ").join("_"))] = answer
                     }
                 })
                 

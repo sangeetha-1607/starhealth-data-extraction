@@ -238,7 +238,8 @@ async function main(){
                     startDate: formattedStartDate || "-",
                     chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
                     screeningQuestionPercentage: screeningQuestionCompletedPercentage+" %" || "0%",
-                    onboardingQuestionPercentage: onboardingQuestionCompletionPercentage+" %" || "0%"
+                    onboardingQuestionPercentage: onboardingQuestionCompletionPercentage+" %" || "0%",
+                    createdAt: user && user.createdAt.toString()
                 };
                 return userObject
             }))

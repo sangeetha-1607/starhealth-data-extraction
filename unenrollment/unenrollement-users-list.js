@@ -18,12 +18,7 @@ async function main(){
             await client.connect();
             console.log("MongoDB connected!!!")
             const database = client.db("cmp-prod");
-            const careProgrammeQuestionsModel  = database.collection("care-programme-questions");
             const usersModel  = database.collection("users");
-            const administratorsModel  = database.collection("administrators");
-            const doctorsModel  = database.collection("doctors");
-            const ahpsModel  = database.collection("ahps");
-            const chatUserModel  = database.collection("chat-users");
             
             const chatMessagesAgg = [
               {

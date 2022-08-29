@@ -74,7 +74,7 @@ async function main(){
               {
                 $unwind: {
                   path: "$userCareProgramPlan",
-                  preserveNullAndEmptyArrays: true,
+                  preserveNullAndEmptyArrays: false,
                 },
               },
               {

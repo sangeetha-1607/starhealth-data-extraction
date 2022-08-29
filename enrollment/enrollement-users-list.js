@@ -233,7 +233,7 @@ async function main(){
                     dob: user && dob || "-",
                     careProgramName: careProgram && careProgram.name || "-",
                     enrolledRequestDate: enrllDate || "-",
-                    enrolmentStatus: item && item.userCareProgramPlan && item.userCareProgramPlan.state || "-",
+                    enrolmentStatus: item && item.userCareProgramPlan && item.userCareProgramPlan.status || "-",
                     approvedBy: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
                     startDate: formattedStartDate || "-",
                     chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",

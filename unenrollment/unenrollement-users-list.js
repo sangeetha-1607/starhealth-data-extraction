@@ -82,7 +82,7 @@ async function main(){
 
             // const onboardingQuestionsModel  = database.collection("onboarding-questions");
 
-            const [userCareprogramsplans, chatUsers] = await Promise.all([
+            const [users, chatUsers] = await Promise.all([
               usersModel.aggregate(cpAgg, {allowDiskUse: true}).toArray(), 
               chatUserModel.aggregate(chatMessagesAgg).toArray()
             ])
@@ -90,8 +90,8 @@ async function main(){
               (a, i) => Object.assign(a, { [String(i._id)]: i }),
               {}
             );
-            const patients = await Promise.all(userCareprogramsplans.map(async (item)=>{
-                const user = item.userData
+            const patients = await Promise.all(users.map(async (item)=>{
+                const user = item
                 const dobDate = user.dob && new Date(user.dob);
                 const dob = dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear();
                 

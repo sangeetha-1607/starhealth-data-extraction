@@ -102,7 +102,7 @@ async function main(){
                     email: user && user.email || "-",
                     dob: user && dob || "-",
                     chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
-                    createdAt: user && user.createdAt.toString()
+                    createdAt: user && user.createdAt
                 };
                 return userObject
             }))

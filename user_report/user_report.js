@@ -104,7 +104,7 @@ async function main(){
               usersModel.find().toArray(), 
               userCareProgrammePlansModel.aggregate(ucpDateAgg, {allowDiskUse: true}).toArray(), 
               chatUserModel.aggregate(chatMessagesAgg).toArray(),
-              requestRaisedAgg.aggregate(requestRaisedAgg).toArray(),
+              userCareProgrammePlansModel.aggregate(requestRaisedAgg).toArray(),
               userLockersModel.aggregate(uploadsCountAgg).toArray(),
             ])
             let chatUsersMap = chatUsers.reduce(

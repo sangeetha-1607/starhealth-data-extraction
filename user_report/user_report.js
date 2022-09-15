@@ -144,8 +144,7 @@ async function main(){
                     signupDate: user && user.createdAt,
                     CTAUploadsCount: userUploadsMap[String(user._id)] && userUploadsMap[String(user._id)].count || "-",
                     CTARequestRaisedCount: reqRaisedMap[String(user._id)] && reqRaisedMap[String(user._id)].count || "-",
-                    CTAChatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
-                    deviceIDs: user.mobileDevices.map(item=>item.deviceId).join(",") || "-"
+                    CTAChatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-"
                 };
                 return userObject
             }))

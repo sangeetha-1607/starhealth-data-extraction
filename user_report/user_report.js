@@ -132,19 +132,19 @@ async function main(){
                 const dobDate = user.dob && new Date(user.dob);
                 const age = dobDate && currDate.getFullYear()-dobDate.getFullYear();
                 let userObject = {
-                    firstName: user && user.name.first || "-",
-                    lastName: user && user.name.last || "-",
-                    mobile: user && user.mobile || "-",
-                    email: user && user.email || "-",
-                    dob: user && user.dob && formatDate(user.dob) || "-",
-                    age: user && user.dob && age || "-",
-                    location: user.addresses.map(item=>item.city).join(",") || "-",
-                    requestRaisedDate: userCareProgramDateMap[String(user._id)] && userCareProgramDateMap[String(user._id)].createdAt && formatDate(userCareProgramDateMap[String(user._id)].createdAt) || "-",
-                    programAdmissionDate: userCareProgramDateMap[String(user._id)] && userCareProgramDateMap[String(user._id)].startDate && formatDate(userCareProgramDateMap[String(user._id)].startDate) || "-",
-                    signupDate: user && user.createdAt,
-                    CTAUploadsCount: userUploadsMap[String(user._id)] && userUploadsMap[String(user._id)].count || "-",
-                    CTARequestRaisedCount: reqRaisedMap[String(user._id)] && reqRaisedMap[String(user._id)].count || "-",
-                    CTAChatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-"
+                    FIRSTNAME: user && user.name.first || "-",
+                    LASTNAME: user && user.name.last || "-",
+                    MOBILE: user && user.mobile || "-",
+                    EMAIL: user && user.email || "-",
+                    DOB: user && user.dob && formatDate(user.dob) || "-",
+                    AGE: user && user.dob && age || "-",
+                    LOCATION: user.addresses.map(item=>item.city).join(",") || "-",
+                    REQUESTRAISEDDATE: userCareProgramDateMap[String(user._id)] && userCareProgramDateMap[String(user._id)].createdAt && formatDate(userCareProgramDateMap[String(user._id)].createdAt) || "-",
+                    PROGRAMADMISSIONDATE: userCareProgramDateMap[String(user._id)] && userCareProgramDateMap[String(user._id)].startDate && formatDate(userCareProgramDateMap[String(user._id)].startDate) || "-",
+                    REGISTEREDDATE: user && user.createdAt,
+                    CTAUPLOADSCOUNT: userUploadsMap[String(user._id)] && userUploadsMap[String(user._id)].count || "-",
+                    CTAREQUESTRAISEDCOUNT: reqRaisedMap[String(user._id)] && reqRaisedMap[String(user._id)].count || "-",
+                    CTACHATCOUNT: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-"
                 };
                 return userObject
             }))

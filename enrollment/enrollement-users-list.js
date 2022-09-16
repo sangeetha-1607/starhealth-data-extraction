@@ -226,20 +226,18 @@ async function main(){
                   approvedBy = ahp.AhpProfile
                 }
                 let userObject = {
-                    firstName: user && user.name.first || "-",
-                    lastName: user && user.name.last || "-",
-                    mobile: user && user.mobile || "-",
-                    email: user && user.email || "-",
-                    dob: user && dob || "-",
-                    careProgramName: careProgram && careProgram.name || "-",
-                    enrolledRequestDate: enrllDate || "-",
-                    enrolmentStatus: item && item.userData && item.userData.userCareProgramPlan && item.userData.userCareProgramPlan.state || "-",
-                    approvedBy: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
-                    startDate: formattedStartDate || "-",
-                    chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
-                    screeningQuestionPercentage: screeningQuestionCompletedPercentage+" %" || "0%",
-                    onboardingQuestionPercentage: onboardingQuestionCompletionPercentage+" %" || "0%",
-                    createdAt: user && user.createdAt.toString()
+                    FIRSTNAME: user && user.name.first || "-",
+                    LASTNAME: user && user.name.last || "-",
+                    MOBILE: user && user.mobile || "-",
+                    EMAIL: user && user.email || "-",
+                    DOB: user && dob || "-",
+                    CAREPROGRAMNAME: careProgram && careProgram.name || "-",
+                    ENROLLEDREQUESTDATE: enrllDate || "-",
+                    ENROLMENTSTATUS: item && item.userData && item.userData.userCareProgramPlan && item.userData.userCareProgramPlan.state || "-",
+                    APPROVEDBY: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
+                    APPROVEDDATE: formattedStartDate || "-",
+                    CHATSCOUNT: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
+                    REGISTEREDDATE: user && user.createdAt.toString()
                 };
                 return userObject
             }))

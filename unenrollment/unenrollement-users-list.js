@@ -96,13 +96,13 @@ async function main(){
                 const dob = dobDate && dobDate.getDate()+"-"+(dobDate.getMonth()+1)+"-"+dobDate.getFullYear();
                 
                 let userObject = {
-                    firstName: user && user.name.first || "-",
-                    lastName: user && user.name.last || "-",
-                    mobile: user && user.mobile || "-",
-                    email: user && user.email || "-",
-                    dob: user && dob || "-",
-                    chatsCount: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
-                    createdAt: user && user.createdAt
+                    FIRSTNAME: user && user.name.first || "-",
+                    LASTNAME: user && user.name.last || "-",
+                    MOBILE: user && user.mobile || "-",
+                    EMAIL: user && user.email || "-",
+                    DOB: user && dob || "-",
+                    CHATSCOUNT: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
+                    REGISTEREDDATE: user && user.createdAt
                 };
                 return userObject
             }))

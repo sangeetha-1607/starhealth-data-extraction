@@ -237,7 +237,7 @@ async function main(){
                     APPROVEDBY: approvedBy && approvedBy.name && `${approvedBy.name.first} ${approvedBy.name.last}` || "-",
                     APPROVEDDATE: formattedStartDate || "-",
                     CHATSCOUNT: chatUsersMap[String(user._id)] && chatUsersMap[String(user._id)].count || "-",
-                    REGISTEREDDATE: user && user.createdAt.toString()
+                    REGISTEREDDATE: user && user.createdAt
                 };
                 return userObject
             }))

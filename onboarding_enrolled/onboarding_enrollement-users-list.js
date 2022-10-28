@@ -5,15 +5,15 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 
 async function main(){
-    // const uri = "mongodb://appAdmin:HLASr!E*66Xm@wellness-cmp-db.cluster-c1sodybcij48.ap-south-1.docdb.amazonaws.com:27017/cmp-prod?tls=false&authSource=admin&retryWrites=false";
-    const uri = "mongodb://localhost:27018";
+    const uri = "mongodb://appAdmin:HLASr!E*66Xm@wellness-cmp-db.cluster-c1sodybcij48.ap-south-1.docdb.amazonaws.com:27017/cmp-prod?tls=false&authSource=admin&retryWrites=false";
+    // const uri = "mongodb://localhost:27018";
     // const client = new MongoClient(uri, {  useNewUrlParser: true, useUnifiedTopology: true } );
     try {
             console.log("Connecting to DB")
 
 
             const client = new MongoClient(uri, {
-              // tlsCAFile: `../rds-combined-ca-bundle.pem`,
+              tlsCAFile: `../rds-combined-ca-bundle.pem`,
               useUnifiedTopology: true 
               })
             await client.connect();

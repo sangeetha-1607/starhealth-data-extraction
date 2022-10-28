@@ -164,6 +164,7 @@ async function main(){
                     if(onboardingQuestionMap[obqitem.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
                         console.log("onboardingQuestionMap[obqitem.onboardingQuestion].question.options", onboardingQuestionMap[obqitem.onboardingQuestion].question.options)
                         console.log("obqitem.answer", obqitem.answer)
+                        console.log("item.name, id", item._id, item.name)
                         answer =onboardingQuestionMap[obqitem.onboardingQuestion].question.options.find(opItem=>{
                           return String(obqitem.answer) === String(opItem._id)
                         }).value

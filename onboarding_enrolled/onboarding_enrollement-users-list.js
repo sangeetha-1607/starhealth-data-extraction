@@ -162,7 +162,8 @@ async function main(){
                         answer =onboardingQuestionMap[obqitem.onboardingQuestion].question.options.filter(opItem=>obqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
                     }
                     if(onboardingQuestionMap[obqitem.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
-                        answer =onboardingQuestionMap[obqitem.onboardingQuestion].question.options.find(opItem=>String(obqitem.answer) === String(opItem._id))?.value || ""
+                        let answerObj =onboardingQuestionMap[obqitem.onboardingQuestion].question.options.find(opItem=>String(obqitem.answer) === String(opItem._id))
+                        answer = answerObj? answerObj.value : ""
                     }
                     onboardingQues[String(onboardingQuestionMap[obqitem.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = answer
                 })

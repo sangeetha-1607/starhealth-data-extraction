@@ -157,15 +157,17 @@ async function main(){
                 let onboardingQues = Object.assign({}, questionNamesMap );
                 
                 item.onboardingQuestions.forEach(obqitem=>{
-                    let answer = obqitem.answer;
-                    if(onboardingQuestionMap[obqitem.onboardingQuestion].question["type"] === "multiple-choice-multi-select"){
+                    if(onboardingQuestionMap[obqitem.onboardingQuestion]){
+                      let answer = obqitem.answer;
+                      if(onboardingQuestionMap[obqitem.onboardingQuestion].question["type"] === "multiple-choice-multi-select"){
                         answer =onboardingQuestionMap[obqitem.onboardingQuestion].question.options.filter(opItem=>obqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
+                      }
+                      if(onboardingQuestionMap[obqitem.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
+                          let answerObj =onboardingQuestionMap[obqitem.onboardingQuestion].question.options.find(opItem=>String(obqitem.answer) === String(opItem._id))
+                          answer = answerObj? answerObj.value : ""
+                      }
+                      onboardingQues[String(onboardingQuestionMap[obqitem.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = answer
                     }
-                    if(onboardingQuestionMap[obqitem.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
-                        let answerObj =onboardingQuestionMap[obqitem.onboardingQuestion].question.options.find(opItem=>String(obqitem.answer) === String(opItem._id))
-                        answer = answerObj? answerObj.value : ""
-                    }
-                    onboardingQues[String(onboardingQuestionMap[obqitem.onboardingQuestion].question.title.toLowerCase().split(" ").join("_"))] = answer
                 })
                 let userObject = {
                     firstName: user && user.name.first || "-",

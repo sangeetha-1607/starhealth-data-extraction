@@ -18,8 +18,8 @@ async function main(){
               })
             await client.connect();
             console.log("MongoDB connected!!!")
-            // const database = client.db("cmp-prod");
-            const database = client.db("star-health-dev");
+            const database = client.db("cmp-prod");
+            // const database = client.db("star-health-dev");
             const careProgrammeQuestionsModel  = database.collection("care-programme-questions");
             const usersModel  = database.collection("users");
             const administratorsModel  = database.collection("administrators");
@@ -106,7 +106,6 @@ async function main(){
                 questionNamesMap[String(item.question.title.toLowerCase().split(" ").join("_"))]={}
                 return acc; 
             },{});
-            console.log("onboardingQuestionMap", onboardingQuestionMap)
             const patients = await Promise.all(userCareprogramsplans.map(async (item)=>{
                 
                 const careProgram = item.userCareProgramPlan && item.userCareProgramPlan.careProgrammePlan && item.userCareProgramPlan.careProgrammePlan.careProgramme

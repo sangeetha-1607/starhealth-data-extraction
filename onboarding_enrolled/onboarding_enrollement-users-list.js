@@ -106,6 +106,7 @@ async function main(){
                 questionNamesMap[String(item.question.title.toLowerCase().split(" ").join("_"))]={}
                 return acc; 
             },{});
+            console.log("onboardingQuestionMap", onboardingQuestionMap)
             const patients = await Promise.all(userCareprogramsplans.map(async (item)=>{
                 
                 const careProgram = item.userCareProgramPlan && item.userCareProgramPlan.careProgrammePlan && item.userCareProgramPlan.careProgrammePlan.careProgramme

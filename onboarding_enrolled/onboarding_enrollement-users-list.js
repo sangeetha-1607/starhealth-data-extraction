@@ -162,9 +162,9 @@ async function main(){
                         answer =onboardingQuestionMap[obqitem.onboardingQuestion].question.options.filter(opItem=>obqitem.answer.indexOf(String(opItem._id))>0).map(i=>i.value).join(", ")
                     }
                     if(onboardingQuestionMap[obqitem.onboardingQuestion].question["type"] === "multiple-choice-single-select"){
+                        console.log("onboardingQuestionMap[obqitem.onboardingQuestion].question.options", onboardingQuestionMap[obqitem.onboardingQuestion].question.options)
+                        console.log("obqitem.answer", obqitem.answer)
                         answer =onboardingQuestionMap[obqitem.onboardingQuestion].question.options.find(opItem=>{
-                          console.log("opItem", opItem)
-                          console.log("obqitem.answer", obqitem.answer)
                           return String(obqitem.answer) === String(opItem._id)
                         }).value
                     }
